@@ -110,7 +110,7 @@ const Index = () => {
   }
 
   if (step === "preview" || proposalHtml) {
-    return <ProposalPreview html={proposalHtml} onBack={handleBack} />;
+    return <ProposalPreview html={proposalHtml} onBack={handleBack} proposalId={proposalId} />;
   }
 
   return <ProjectForm onSubmit={handleGenerateProposal} isLoading={isLoading} />;
