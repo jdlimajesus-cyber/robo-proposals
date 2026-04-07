@@ -11,6 +11,7 @@ const Index = () => {
   const [step, setStep] = useState<AppStep>("form");
   const [proposalHtml, setProposalHtml] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [proposalId, setProposalId] = useState(() => `prop_${Date.now()}`);
 
   const handleGenerateProposal = async (data: ProjectData) => {
     setIsLoading(true);
