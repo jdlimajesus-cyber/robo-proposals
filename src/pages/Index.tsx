@@ -102,6 +102,7 @@ const Index = () => {
   const handleBack = () => {
     setStep("form");
     setProposalHtml("");
+    setProposalId(`prop_${Date.now()}`);
   };
 
   if (step === "generating" && !proposalHtml) {
