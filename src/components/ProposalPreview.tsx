@@ -1,18 +1,77 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, FileText, Printer } from "lucide-react";
-import { useRef } from "react";
+import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History } from "lucide-react";
+import { useRef, useState, useCallback, useEffect } from "react";
+import { VersionHistoryPanel } from "@/components/VersionHistoryPanel";
+import { useProposalVersions } from "@/hooks/use-proposal-versions";
 
 interface ProposalPreviewProps {
   html: string;
   onBack: () => void;
+  proposalId?: string;
 }
 
-export function ProposalPreview({ html, onBack }: ProposalPreviewProps) {
+export function ProposalPreview({ html, onBack, proposalId = "default" }: ProposalPreviewProps) {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [isEditing, setIsEditing] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
+  const [currentHtml, setCurrentHtml] = useState(html);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  const { versions, activeVersionId, saveVersion, loadVersion, deleteVersion, getLatestContent } =
+    useProposalVersions(proposalId);
+
+  // On first mount, check for saved content or save initial version
+  useEffect(() => {
+    const saved = getLatestContent();
+    if (saved && saved !== html) {
+      setCurrentHtml(saved);
+    } else if (versions.length === 0 && html) {
+      saveVersion(html, "generated");
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  // Update when new html streams in
+  useEffect(() => {
+    setCurrentHtml(html);
+  }, [html]);
+
+  const handleInput = useCallback(() => {
+    if (!contentRef.current) return;
+    const updated = contentRef.current.innerHTML;
+    setCurrentHtml(updated);
+
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => {
+      saveVersion(updated, "edited");
+    }, 2000);
+  }, [saveVersion]);
+
+  const toggleEdit = () => {
+    if (isEditing && contentRef.current) {
+      // Save on exit
+      saveVersion(contentRef.current.innerHTML, "edited");
+    }
+    setIsEditing((prev) => !prev);
+  };
+
+  const handleLoadVersion = (versionId: number) => {
+    const content = loadVersion(versionId);
+    if (content) {
+      setCurrentHtml(content);
+    }
+  };
+
+  const handleSaveManual = () => {
+    if (contentRef.current) {
+      saveVersion(contentRef.current.innerHTML, "manual");
+    }
+  };
 
   const handlePrint = () => {
     const printWindow = window.open("", "_blank");
     if (!printWindow) return;
+    const content = contentRef.current?.innerHTML || currentHtml;
     printWindow.document.write(`
       <!DOCTYPE html>
       <html>
@@ -33,7 +92,7 @@ export function ProposalPreview({ html, onBack }: ProposalPreviewProps) {
           @media print { body { padding: 20px; } .image-container { page-break-inside: avoid; } }
         </style>
       </head>
-      <body>${html}</body>
+      <body>${content}</body>
       </html>
     `);
     printWindow.document.close();
@@ -54,6 +113,21 @@ export function ProposalPreview({ html, onBack }: ProposalPreviewProps) {
             </span>
           </div>
           <div className="flex gap-2">
+            <Button
+              variant={isEditing ? "default" : "outline"}
+              onClick={toggleEdit}
+              className={`gap-2 ${isEditing ? "brand-gradient text-primary-foreground" : ""}`}
+            >
+              {isEditing ? <PencilOff className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+              {isEditing ? "Finalizar Edição" : "Editar"}
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowHistory(!showHistory)}
+              className="gap-2"
+            >
+              <History className="h-4 w-4" /> Versões ({versions.length})
+            </Button>
             <Button variant="outline" onClick={handlePrint} className="gap-2">
               <Printer className="h-4 w-4" /> Imprimir
             </Button>
@@ -65,13 +139,30 @@ export function ProposalPreview({ html, onBack }: ProposalPreviewProps) {
       </div>
 
       {/* Proposal Content */}
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className={`max-w-4xl mx-auto px-6 py-8 transition-all ${showHistory ? "mr-80" : ""}`}>
         <div
           ref={contentRef}
-          className="proposal-container bg-card p-8 md:p-12 rounded-xl shadow-lg animate-fade-in"
-          dangerouslySetInnerHTML={{ __html: html }}
+          className={`proposal-container bg-card p-8 md:p-12 rounded-xl shadow-lg animate-fade-in ${
+            isEditing ? "proposal-editing" : ""
+          }`}
+          contentEditable={isEditing}
+          suppressContentEditableWarning
+          onInput={handleInput}
+          dangerouslySetInnerHTML={{ __html: currentHtml }}
         />
       </div>
+
+      {/* Version History Panel */}
+      {showHistory && (
+        <VersionHistoryPanel
+          versions={versions}
+          activeVersionId={activeVersionId}
+          onLoadVersion={handleLoadVersion}
+          onDeleteVersion={deleteVersion}
+          onClose={() => setShowHistory(false)}
+          onSaveManual={handleSaveManual}
+        />
+      )}
     </div>
   );
 }

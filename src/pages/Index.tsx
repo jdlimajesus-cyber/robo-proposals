@@ -11,6 +11,7 @@ const Index = () => {
   const [step, setStep] = useState<AppStep>("form");
   const [proposalHtml, setProposalHtml] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [proposalId, setProposalId] = useState(() => `prop_${Date.now()}`);
 
   const handleGenerateProposal = async (data: ProjectData) => {
     setIsLoading(true);
@@ -101,6 +102,7 @@ const Index = () => {
   const handleBack = () => {
     setStep("form");
     setProposalHtml("");
+    setProposalId(`prop_${Date.now()}`);
   };
 
   if (step === "generating" && !proposalHtml) {
@@ -108,7 +110,7 @@ const Index = () => {
   }
 
   if (step === "preview" || proposalHtml) {
-    return <ProposalPreview html={proposalHtml} onBack={handleBack} />;
+    return <ProposalPreview html={proposalHtml} onBack={handleBack} proposalId={proposalId} />;
   }
 
   return <ProjectForm onSubmit={handleGenerateProposal} isLoading={isLoading} />;

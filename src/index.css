@@ -142,4 +142,38 @@
     @apply border-2 border-dashed border-border rounded-lg p-8 my-6 text-center;
     background: hsl(var(--muted));
   }
+
+  /* Editing mode */
+  .proposal-editing {
+    outline: 2px dashed hsl(var(--warning));
+    outline-offset: 4px;
+  }
+  .proposal-editing .proposal-title,
+  .proposal-editing .proposal-subtitle,
+  .proposal-editing .proposal-text,
+  .proposal-editing .proposal-list li,
+  .proposal-editing .proposal-section,
+  .proposal-editing h3,
+  .proposal-editing p {
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 4px;
+    transition: all 0.2s ease;
+  }
+  .proposal-editing .proposal-title:hover,
+  .proposal-editing .proposal-subtitle:hover,
+  .proposal-editing .proposal-text:hover,
+  .proposal-editing .proposal-list li:hover,
+  .proposal-editing .proposal-section:hover,
+  .proposal-editing h3:hover,
+  .proposal-editing p:hover {
+    border-color: hsl(var(--warning));
+    background: hsl(var(--warning) / 0.05);
+  }
+  .proposal-editing *:focus {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-color: hsl(var(--primary));
+    background: hsl(var(--primary) / 0.05);
+  }
 }
