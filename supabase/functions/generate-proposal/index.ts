@@ -185,6 +185,7 @@ Inicie com uma capa executiva contendo: título "PROPOSTA TÉCNICA E COMERCIAL",
 Após a capa, inclua um índice com links para cada seção gerada.
 
 IMPORTANTE:
+- NÃO envolva o HTML em blocos de código markdown (sem \`\`\`html ou \`\`\`). Gere APENAS o HTML puro diretamente.
 - Diferencie claramente FATO, HIPÓTESE, PREMISSA e ESTIMATIVA
 - Declare incertezas e dados a confirmar
 - Apresente alternativas de solução antes de recomendar
