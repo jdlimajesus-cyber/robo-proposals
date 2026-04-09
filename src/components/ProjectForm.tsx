@@ -1,19 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { ProjectData } from "@/types/project";
-import { Bot, Cog, Factory, Zap } from "lucide-react";
+import { Bot, Cog, Factory, Zap, ChevronDown, ChevronUp } from "lucide-react";
 
 interface ProjectFormProps {
   onSubmit: (data: ProjectData) => void;
   isLoading: boolean;
 }
 
-const tiposAplicacao = [
+const STORAGE_KEY = "proposal_form_data";
+
+const applicationTypes = [
   "Soldagem Robotizada",
   "Paletização",
   "Pick and Place",
@@ -26,47 +29,71 @@ const tiposAplicacao = [
   "Embalagem Automatizada",
   "Manipulação de Materiais",
   "Dosagem e Aplicação de Adesivos",
+  "Manufatura Aditiva",
   "Outro",
 ];
 
-const ambientes = [
-  "Industrial padrão",
-  "Alta temperatura",
-  "Ambiente corrosivo",
-  "Sala limpa (Clean Room)",
-  "Área explosiva (ATEX)",
-  "Ambiente úmido",
-  "Ambiente externo",
-];
+const automationLevels = ["Manual", "Semi-automático", "Totalmente automático"];
 
-const niveisAutomacao = [
-  "Semi-automático (com intervenção do operador)",
-  "Totalmente automático",
-  "Colaborativo (robô + operador)",
-];
+const defaultData: ProjectData = {
+  client_name: "",
+  project_title: "",
+  custom_scope_description: "",
+  proposal_version: "Completa",
+  application_type: "",
+  production_target: undefined,
+  target_cycle_time: undefined,
+  piece_weight: undefined,
+  piece_dimensions: "",
+  automation_level: "Totalmente automático",
+  operational_environment: "Industrial padrão",
+  product_name: "",
+  work_shifts: undefined,
+  continuous_operation: false,
+  material: "",
+  surface_finish: "",
+  operating_temperature: "",
+  installation_area_size: "",
+  available_power_supply: "",
+  available_compressed_air: "",
+  investment_range_basic: "",
+  investment_range_intermediate: "",
+  investment_range_optimized: "",
+  observacoes: "",
+};
 
 export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
-  const [formData, setFormData] = useState<ProjectData>({
-    tipo_aplicacao: "",
-    producao: 0,
-    peca: "",
-    peso: 0,
-    dimensoes: "",
-    ambiente: "Industrial padrão",
-    automacao: "Totalmente automático",
-    processo_atual: "",
-    objetivo: "",
-    observacoes: "",
+  const [formData, setFormData] = useState<ProjectData>(() => {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) return { ...defaultData, ...JSON.parse(saved) };
+    } catch {}
+    return defaultData;
   });
+
+  const [showTechnical, setShowTechnical] = useState(false);
+  const [showInfra, setShowInfra] = useState(false);
+  const [showCommercial, setShowCommercial] = useState(false);
+
+  // Auto-save to localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
+  }, [formData]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
   };
 
-  const updateField = (field: keyof ProjectData, value: string | number) => {
+  const updateField = (field: keyof ProjectData, value: string | number | boolean | undefined) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
+
+  const isValid =
+    formData.client_name.trim() !== "" &&
+    formData.project_title.trim() !== "" &&
+    formData.custom_scope_description.trim() !== "" &&
+    formData.application_type !== "";
 
   return (
     <div className="min-h-screen bg-background">
@@ -91,125 +118,297 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
       </div>
 
       {/* Form */}
-      <div className="max-w-4xl mx-auto px-6 -mt-6">
+      <div className="max-w-4xl mx-auto px-6 -mt-6 pb-12">
         <Card className="p-8 shadow-lg animate-fade-in">
-          <h2 className="text-xl font-semibold text-foreground mb-6">Dados do Projeto</h2>
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Row 1 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="tipo">Tipo de Aplicação *</Label>
-                <Select value={formData.tipo_aplicacao} onValueChange={(v) => updateField("tipo_aplicacao", v)}>
-                  <SelectTrigger><SelectValue placeholder="Selecione o tipo" /></SelectTrigger>
-                  <SelectContent>
-                    {tiposAplicacao.map((t) => (
-                      <SelectItem key={t} value={t}>{t}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+          <form onSubmit={handleSubmit} className="space-y-8">
+
+            {/* === SEÇÃO 1: DADOS GERAIS === */}
+            <div>
+              <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
+                📋 Dados Gerais
+              </h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <Label>Nome do Cliente *</Label>
+                  <Input
+                    placeholder="Ex: Empresa ABC Ltda"
+                    value={formData.client_name}
+                    onChange={(e) => updateField("client_name", e.target.value)}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>Título do Projeto *</Label>
+                  <Input
+                    placeholder="Ex: Célula Robotizada para Montagem"
+                    value={formData.project_title}
+                    onChange={(e) => updateField("project_title", e.target.value)}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="producao">Produção Desejada (peças/hora) *</Label>
-                <Input
-                  id="producao"
-                  type="number"
-                  min={1}
-                  placeholder="Ex: 120"
-                  value={formData.producao || ""}
-                  onChange={(e) => updateField("producao", parseInt(e.target.value) || 0)}
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+                <div className="space-y-2">
+                  <Label>Tipo de Aplicação *</Label>
+                  <Select value={formData.application_type} onValueChange={(v) => updateField("application_type", v)}>
+                    <SelectTrigger><SelectValue placeholder="Selecione o tipo" /></SelectTrigger>
+                    <SelectContent>
+                      {applicationTypes.map((t) => (
+                        <SelectItem key={t} value={t}>{t}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>Versão da Proposta *</Label>
+                  <Select
+                    value={formData.proposal_version}
+                    onValueChange={(v) => updateField("proposal_version", v)}
+                  >
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Basica">Básica (7 seções)</SelectItem>
+                      <SelectItem value="Normal">Normal (12 seções)</SelectItem>
+                      <SelectItem value="Completa">Completa (15 seções)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="mt-4 space-y-2">
+                <Label>Descrição do Escopo *</Label>
+                <Textarea
+                  placeholder="Descreva a aplicação solicitada, o processo atual e o objetivo do projeto..."
+                  value={formData.custom_scope_description}
+                  onChange={(e) => updateField("custom_scope_description", e.target.value)}
+                  rows={4}
                 />
               </div>
             </div>
 
-            {/* Row 2 */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="space-y-2 md:col-span-1">
-                <Label htmlFor="peca">Descrição da Peça *</Label>
-                <Input
-                  id="peca"
-                  placeholder="Ex: Carcaça de motor elétrico"
-                  value={formData.peca}
-                  onChange={(e) => updateField("peca", e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="peso">Peso da Peça (kg) *</Label>
-                <Input
-                  id="peso"
-                  type="number"
-                  step="0.1"
-                  min={0}
-                  placeholder="Ex: 5.5"
-                  value={formData.peso || ""}
-                  onChange={(e) => updateField("peso", parseFloat(e.target.value) || 0)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="dimensoes">Dimensões (mm)</Label>
-                <Input
-                  id="dimensoes"
-                  placeholder="Ex: 300x200x150"
-                  value={formData.dimensoes}
-                  onChange={(e) => updateField("dimensoes", e.target.value)}
-                />
-              </div>
+            {/* === SEÇÃO 2: PARÂMETROS TÉCNICOS (Colapsável) === */}
+            <div className="border border-border rounded-lg">
+              <button
+                type="button"
+                onClick={() => setShowTechnical(!showTechnical)}
+                className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors rounded-lg"
+              >
+                <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  ⚙️ Parâmetros Técnicos <span className="text-sm font-normal text-muted-foreground">(Opcional)</span>
+                </h2>
+                {showTechnical ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </button>
+
+              {showTechnical && (
+                <div className="px-4 pb-4 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Produção Desejada (pçs/h)</Label>
+                      <Input
+                        type="number" min={1} placeholder="Ex: 150"
+                        value={formData.production_target ?? ""}
+                        onChange={(e) => updateField("production_target", e.target.value ? parseInt(e.target.value) : undefined)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Tempo de Ciclo Alvo (s)</Label>
+                      <Input
+                        type="number" min={1} placeholder="Ex: 24"
+                        value={formData.target_cycle_time ?? ""}
+                        onChange={(e) => updateField("target_cycle_time", e.target.value ? parseInt(e.target.value) : undefined)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Peso da Peça (kg)</Label>
+                      <Input
+                        type="number" step="0.1" min={0} placeholder="Ex: 6"
+                        value={formData.piece_weight ?? ""}
+                        onChange={(e) => updateField("piece_weight", e.target.value ? parseFloat(e.target.value) : undefined)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Nome do Produto</Label>
+                      <Input
+                        placeholder="Ex: Suporte 6954"
+                        value={formData.product_name ?? ""}
+                        onChange={(e) => updateField("product_name", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Dimensões da Peça (mm)</Label>
+                      <Input
+                        placeholder="Ex: 300x200x180"
+                        value={formData.piece_dimensions ?? ""}
+                        onChange={(e) => updateField("piece_dimensions", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Material</Label>
+                      <Input
+                        placeholder="Ex: Aço carbono"
+                        value={formData.material ?? ""}
+                        onChange={(e) => updateField("material", e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Acabamento Superficial</Label>
+                      <Input
+                        placeholder="Ex: Usinada"
+                        value={formData.surface_finish ?? ""}
+                        onChange={(e) => updateField("surface_finish", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Nível de Automação</Label>
+                      <Select value={formData.automation_level ?? "Totalmente automático"} onValueChange={(v) => updateField("automation_level", v)}>
+                        <SelectTrigger><SelectValue /></SelectTrigger>
+                        <SelectContent>
+                          {automationLevels.map((a) => (
+                            <SelectItem key={a} value={a}>{a}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Ambiente Operacional</Label>
+                      <Input
+                        placeholder="Ex: Industrial padrão"
+                        value={formData.operational_environment ?? ""}
+                        onChange={(e) => updateField("operational_environment", e.target.value)}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Turnos de Operação</Label>
+                      <Input
+                        type="number" min={1} max={3} placeholder="Ex: 3"
+                        value={formData.work_shifts ?? ""}
+                        onChange={(e) => updateField("work_shifts", e.target.value ? parseInt(e.target.value) : undefined)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Temperatura de Operação</Label>
+                      <Input
+                        placeholder="Ex: Ambiente"
+                        value={formData.operating_temperature ?? ""}
+                        onChange={(e) => updateField("operating_temperature", e.target.value)}
+                      />
+                    </div>
+                    <div className="flex items-center gap-3 pt-6">
+                      <Switch
+                        checked={formData.continuous_operation ?? false}
+                        onCheckedChange={(v) => updateField("continuous_operation", v)}
+                      />
+                      <Label>Operação Contínua</Label>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Row 3 */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-2">
-                <Label htmlFor="ambiente">Ambiente</Label>
-                <Select value={formData.ambiente} onValueChange={(v) => updateField("ambiente", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {ambientes.map((a) => (
-                      <SelectItem key={a} value={a}>{a}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="automacao">Nível de Automação</Label>
-                <Select value={formData.automacao} onValueChange={(v) => updateField("automacao", v)}>
-                  <SelectTrigger><SelectValue /></SelectTrigger>
-                  <SelectContent>
-                    {niveisAutomacao.map((n) => (
-                      <SelectItem key={n} value={n}>{n}</SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
+            {/* === SEÇÃO 3: INFRAESTRUTURA (Colapsável) === */}
+            <div className="border border-border rounded-lg">
+              <button
+                type="button"
+                onClick={() => setShowInfra(!showInfra)}
+                className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors rounded-lg"
+              >
+                <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  🏭 Infraestrutura <span className="text-sm font-normal text-muted-foreground">(Opcional)</span>
+                </h2>
+                {showInfra ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </button>
+
+              {showInfra && (
+                <div className="px-4 pb-4 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Área Disponível (mm)</Label>
+                      <Input
+                        placeholder="Ex: 2500x8200"
+                        value={formData.installation_area_size ?? ""}
+                        onChange={(e) => updateField("installation_area_size", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Alimentação Elétrica</Label>
+                      <Input
+                        placeholder="Ex: 380V 3F 60Hz"
+                        value={formData.available_power_supply ?? ""}
+                        onChange={(e) => updateField("available_power_supply", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Ar Comprimido</Label>
+                      <Input
+                        placeholder="Ex: 6 bar, 200 Nl/min"
+                        value={formData.available_compressed_air ?? ""}
+                        onChange={(e) => updateField("available_compressed_air", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Row 4 */}
+            {/* === SEÇÃO 4: DADOS COMERCIAIS (Colapsável) === */}
+            <div className="border border-border rounded-lg">
+              <button
+                type="button"
+                onClick={() => setShowCommercial(!showCommercial)}
+                className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors rounded-lg"
+              >
+                <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                  💰 Dados Comerciais <span className="text-sm font-normal text-muted-foreground">(Opcional)</span>
+                </h2>
+                {showCommercial ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+              </button>
+
+              {showCommercial && (
+                <div className="px-4 pb-4 space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div className="space-y-2">
+                      <Label>Investimento Básico</Label>
+                      <Input
+                        placeholder="Ex: R$ 150.000 - R$ 250.000"
+                        value={formData.investment_range_basic ?? ""}
+                        onChange={(e) => updateField("investment_range_basic", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Investimento Intermediário</Label>
+                      <Input
+                        placeholder="Ex: R$ 300.000 - R$ 500.000"
+                        value={formData.investment_range_intermediate ?? ""}
+                        onChange={(e) => updateField("investment_range_intermediate", e.target.value)}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Investimento Otimizado</Label>
+                      <Input
+                        placeholder="Ex: R$ 600.000 - R$ 900.000"
+                        value={formData.investment_range_optimized ?? ""}
+                        onChange={(e) => updateField("investment_range_optimized", e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Observações */}
             <div className="space-y-2">
-              <Label htmlFor="processo">Processo Atual</Label>
+              <Label>Observações Adicionais</Label>
               <Textarea
-                id="processo"
-                placeholder="Descreva como o processo é realizado atualmente..."
-                value={formData.processo_atual}
-                onChange={(e) => updateField("processo_atual", e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="objetivo">Objetivo do Projeto *</Label>
-              <Textarea
-                id="objetivo"
-                placeholder="Descreva o objetivo principal do projeto de automação..."
-                value={formData.objetivo}
-                onChange={(e) => updateField("objetivo", e.target.value)}
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="obs">Observações</Label>
-              <Textarea
-                id="obs"
                 placeholder="Informações adicionais relevantes..."
-                value={formData.observacoes}
+                value={formData.observacoes ?? ""}
                 onChange={(e) => updateField("observacoes", e.target.value)}
                 rows={2}
               />
@@ -217,7 +416,7 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
 
             <Button
               type="submit"
-              disabled={isLoading || !formData.tipo_aplicacao || !formData.producao || !formData.peca || !formData.peso || !formData.objetivo}
+              disabled={isLoading || !isValid}
               className="w-full h-12 text-lg font-semibold brand-gradient hover:opacity-90 text-primary-foreground"
             >
               {isLoading ? (

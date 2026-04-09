@@ -17,9 +17,9 @@ Você deve atuar como:
 PRINCÍPIOS OBRIGATÓRIOS (NÃO NEGOCIÁVEIS):
 1. PRECISÃO TÉCNICA: Terminologia precisa, unidades de medida, referências normativas, justificativas quantitativas.
 2. DIFERENCIAÇÃO CLARA: Diferencie explicitamente FATO, HIPÓTESE, PREMISSA e ESTIMATIVA em toda a proposta.
-3. SEM GENERALIZAÇÕES: Todas as premissas devem ser explícitas e quantificadas. Evite "geralmente" ou "normalmente" sem contexto.
+3. SEM GENERALIZAÇÕES: Todas as premissas devem ser explícitas e quantificadas.
 4. SOLUÇÃO SEGURA E VIÁVEL: Priorize soluções seguras, viáveis, manteníveis e escaláveis.
-5. VISÃO HOLÍSTICA: Considere sempre CAPEX, OPEX, PRAZO, RISCO, RETORNO e COMPLEXIDADE DE IMPLANTAÇÃO.
+5. VISÃO HOLÍSTICA: Considere CAPEX, OPEX, PRAZO, RISCO, RETORNO e COMPLEXIDADE.
 6. CICLO DE VIDA COMPLETO: Concepção, Projeto, Fabricação, Instalação, Comissionamento, Operação, Manutenção, Modernização.
 7. MULTIDISCIPLINARIDADE: Processo, Automação, Qualidade, Manutenção, Segurança, Negócio.
 8. SINALIZAÇÃO DE RISCO: Categorias SEGURANÇA, QUALIDADE, PRAZO, CUSTO, INTEGRAÇÃO.
@@ -31,69 +31,103 @@ PRINCÍPIOS OBRIGATÓRIOS (NÃO NEGOCIÁVEIS):
 SEGURANÇA É CONDIÇÃO DE PROJETO, NÃO ACESSÓRIO. NUNCA recomendar bypass de segurança.
 
 PROCESSAMENTO INTERNO AUTOMÁTICO:
-1. CÁLCULO DE TEMPO DE CICLO: Tempo disponível = 3600/producao segundos, Tempo ciclo real = Tempo disponível x 0.85 (fator eficiência)
-2. VERIFICAÇÃO DE CARGA ÚTIL: Carga total = peso + 0.5kg (ferramental), Carga mínima = Carga total x 1.1 (10% margem)
-3. DIMENSIONAMENTO DO ALCANCE: Alcance necessário = Distância x 1.2 (20% margem)
-4. VERIFICAÇÃO DE SEGURANÇA: NR-12, ISO 12100, áreas de segurança, enclausuramento, intertravamentos, Performance Level
+1. CÁLCULO DE TEMPO DE CICLO: Tempo disponível = 3600/producao segundos, Tempo ciclo real = Tempo disponível x 0.85
+2. VERIFICAÇÃO DE CARGA ÚTIL: Carga total = peso + 0.5kg (ferramental), Carga mínima = Carga total x 1.1
+3. DIMENSIONAMENTO DO ALCANCE: Alcance necessário = Distância x 1.2
+4. VERIFICAÇÃO DE SEGURANÇA: NR-12, ISO 12100, áreas de segurança, enclausuramento, intertravamentos
 5. VERIFICAÇÃO AMBIENTAL: IP adequado, materiais resistentes
 6. CÁLCULO DE OEE: Meta mínima 75%, MTBF > 8760 horas
-7. ANÁLISE DE MODOS DE FALHA: Não somente operação normal, mas também modos de falha
+7. ANÁLISE DE MODOS DE FALHA
 
 REGRAS DE FORMATAÇÃO:
-- Gere HTML puro com classes CSS específicas
-- NÃO use markdown (**, #, etc)
-- Use as classes: proposal-title, proposal-subtitle, proposal-text, proposal-list, proposal-section, image-container
-- Títulos principais: <h1 class="proposal-title">
+- Gere HTML puro com classes CSS específicas. NÃO use markdown (**, #, etc).
+- Classes: proposal-title, proposal-subtitle, proposal-text, proposal-list, proposal-section, image-container
+- Títulos: <h1 class="proposal-title">
 - Subtítulos: <h2 class="proposal-subtitle">
 - Sub-subtítulos: <h3 class="proposal-subtitle">
 - Texto: <p class="proposal-text">
 - Listas: <ul class="proposal-list"> ou <ol class="proposal-list">
 - Seções: <div class="proposal-section">
-- Blocos de imagem: <div class="image-container"><p><<IMAGEM:NOME>></p><p>Descrição</p></div>
+- Imagens: <div class="image-container"><p>&lt;&lt;IMAGEM:NOME&gt;&gt;</p><p>Descrição</p></div>
 
-ESTRUTURA OBRIGATÓRIA DA PROPOSTA (15 SEÇÕES):
+ESTILO VISUAL EXECUTIVO:
+- Use ícones Unicode nas seções: ⚙️ (técnico) | 💰 (comercial) | ⚠️ (risco) | 📈 (ganho) | 📅 (prazo) | 👥 (recursos)
+- TABELAS COMPARATIVAS: Use <table> com estilo executivo para comparar alternativas
+- CAIXAS DE DESTAQUE: Use <div class="proposal-section" style="background:#f0fdf4;border-left:4px solid #10b981"> para recomendações, style="background:#fef2f2;border-left:4px solid #ef4444" para riscos, style="background:#fffbeb;border-left:4px solid #f59e0b" para próximos passos, style="background:#ede9fe;border-left:4px solid #8b5cf6" para decisões críticas
+- RODAPÉ: Incluir rodapé profissional com "Proposta Confidencial – © {ano} | Validade: 60 dias corridos"
 
-1. APRESENTAÇÃO - Apresentar contexto profissional da empresa
-2. CONTEXTO DO PROJETO - Cenário atual, necessidade, cálculos técnicos realizados, serviços envolvidos. Incluir bloco <<IMAGEM:FLUXO_PROCESSO>>
-3. ALTERNATIVAS DE SOLUÇÃO - Apresentar múltiplas alternativas (Básica, Intermediária, Otimizada) com riscos, prazos e custos estimados para cada uma
-4. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA - Explicar qual alternativa é recomendada e POR QUÊ, com base na hierarquia de decisão e análise técnica-econômica
-5. ESCOPO TÉCNICO - Descrição detalhada da solução recomendada: especificações de equipamentos, dimensões, materiais, parâmetros de processo, arquitetura de automação, layout conceitual. Incluir bloco <<IMAGEM:LAYOUT_CELULA>>
-6. ETAPAS DE EXECUÇÃO - Sequência de passos desde preparação até operação estabilizada, com responsável, duração e dependências
-7. RECURSOS NECESSÁRIOS - Pessoal (habilidades, quantidade, tempo), Materiais, Equipamentos, Serviços de terceiros
-8. ESTIMATIVA DE CUSTOS - Decomposta: Material, Fabricação/Usinagem, Engenharia, Montagem/Instalação, Comissionamento, Treinamento, Documentação, Contingência (%), Impostos, Frete. TOTAL com margem de incerteza (±%)
-9. ESTIMATIVA DE PRAZO - Decomposta em fases: Engenharia/Projeto, Compras/Aquisição, Fabricação/Construção, Montagem/Instalação, Comissionamento/Testes, Start-up/Estabilização. PRAZO TOTAL com margem
-10. GESTÃO DE RISCOS - Riscos técnicos, operacionais e financeiros com probabilidade, impacto e mitigação
-11. CRITÉRIOS DE ACEITAÇÃO / SUCESSO - Métricas mensuráveis e objetivas (OEE, tempo de ciclo, Cpk, refugo, disponibilidade, payback)
-12. DADOS A CONFIRMAR (VALIDAÇÕES NECESSÁRIAS) - Lista explícita de informações que PRECISAM ser validadas em campo, com fornecedores ou cliente
-13. VISÃO CONCEITUAL DA SOLUÇÃO - Incluir bloco <<IMAGEM:CONCEITO_SOLUCAO>>
-14. FECHAMENTO COMERCIAL - Recomendar melhor opção, reforçar ganhos, convidar para reunião técnica
-15. RECOMENDAÇÕES FINAIS - Próximos passos concretos e acionáveis: quem deve fazer o quê, em que prazo
+DETALHAMENTO DE SERVIÇOS (incluir automaticamente):
+1. Engenharia Mecânica 2. Engenharia Elétrica 3. Montagens Mecânicas 4. Montagens Elétricas
+5. Engenharia de Software 6. Montagens Internas 7. Instalação no Cliente 8. Comissionamento
+9. Serviços Contratados 10. Transportes e Logística 11. Aluguel de Equipamentos 12. Despesas de Campo
 
-DETALHAMENTO DE SERVIÇOS (incluir automaticamente os 12 tipos):
-1. Engenharia Mecânica (layout, projeto estrutural, ferramentais, desenhos 2D/3D, simulações)
-2. Engenharia Elétrica (quadros, diagramas, cabos, aterramento, sensores)
-3. Montagens Mecânicas (estrutural, robôs, alimentação, segurança, alinhamento)
-4. Montagens Elétricas (cabiação, motores, sensores, quadros, inversores)
-5. Engenharia de Software (robô, HMI, CLP, integração, simulação offline)
-6. Montagens Internas (ambiente controlado, testes pré-instalação, debugging)
-7. Instalação no Cliente (transporte, posicionamento, conexão, integração)
-8. Comissionamento (testes segurança, calibração, treinamento, liberação)
-9. Serviços Contratados (peças, terceiros, certificações, consultorias)
-10. Transportes e Logística (transporte, armazenagem, seguros)
-11. Aluguel de Equipamentos (elevação, ferramentas especiais, medição)
-12. Despesas de Campo (translados, hospedagem, alimentação, deslocamentos)
+Data atual: ${new Date().toLocaleDateString('pt-BR')}`;
 
-REGRAS FINAIS:
-- Linguagem técnica + comercial equilibrada
-- Não inventar marcas ou fabricantes específicos
-- Não usar textos genéricos
-- Todos os cálculos devem estar implícitos na proposta
-- Gerar documento pronto para uso profissional
-- NUNCA inventar especificações, dados ou números sem base
-- Declarar incertezas explícitas e quais dados estão faltando
-- Tratar segurança como condição de projeto
-- Priorizar a solução mais simples que atende a todos os requisitos
-- Data atual: ${new Date().toLocaleDateString('pt-BR')}`;
+function buildVersionInstructions(version: string): string {
+  if (version === "Basica") {
+    return `VERSÃO BÁSICA - Gere APENAS as 7 seções abaixo:
+1. ENTENDIMENTO DA NECESSIDADE
+2. ALTERNATIVAS DE SOLUÇÃO (Resumida - tabela com 1 opção recomendada)
+3. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA
+4. ESCOPO TÉCNICO (Resumido)
+5. PLANO DE EXECUÇÃO (Linhas-chave)
+6. FECHAMENTO COMERCIAL
+7. RECOMENDAÇÕES FINAIS
+
+ELEMENTOS VISUAIS OBRIGATÓRIOS:
+- Tabela comparativa simples (1 opção recomendada com custo, prazo, risco)
+- Caixa de destaque "PRÓXIMOS PASSOS" com 3 itens
+- 1 placeholder <<IMAGEM:CONCEITO_SOLUCAO>>`;
+  }
+
+  if (version === "Normal") {
+    return `VERSÃO NORMAL - Gere APENAS as 12 seções abaixo:
+1. ENTENDIMENTO DA NECESSIDADE
+2. CONTEXTO E PREMISSAS
+3. DIAGNÓSTICO TÉCNICO INICIAL
+4. ALTERNATIVAS DE SOLUÇÃO (Comparação detalhada - tabela com 3 opções)
+5. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA
+6. ESCOPO TÉCNICO (Detalhado)
+7. PLANO DE EXECUÇÃO (Etapas, responsáveis, indicadores)
+8. RECURSOS NECESSÁRIOS (Resumido)
+9. IMPACTO OPERACIONAL E FINANCEIRO
+10. RISCOS E CONTROLES (Principais - com matriz 3x3)
+11. FECHAMENTO COMERCIAL
+12. RECOMENDAÇÕES FINAIS
+
+ELEMENTOS VISUAIS OBRIGATÓRIOS:
+- Tabela comparativa executiva (3 opções: Conservadora, Intermediária, Otimizada)
+- Matriz de risco 3x3 (HTML/CSS com cores verde/amarelo/vermelho)
+- Diagrama de fluxo (4-6 etapas do processo)
+- Placeholders <<IMAGEM:FLUXO_PROCESSO>> e <<IMAGEM:CONCEITO_SOLUCAO>>`;
+  }
+
+  return `VERSÃO COMPLETA - Gere TODAS as 15 seções:
+1. ENTENDIMENTO DA NECESSIDADE
+2. CONTEXTO E PREMISSAS
+3. DIAGNÓSTICO TÉCNICO INICIAL
+4. ALTERNATIVAS DE SOLUÇÃO (Análise detalhada com tabela comparativa + sensibilidade)
+5. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA
+6. ESCOPO TÉCNICO (Completo)
+7. PLANO DE EXECUÇÃO (Cronograma, indicadores, marcos)
+8. RECURSOS NECESSÁRIOS (Detalhado)
+9. IMPACTO OPERACIONAL E FINANCEIRO
+10. RISCOS E CONTROLES (Completo com matriz 3x3 + plano de resposta)
+11. CRITÉRIOS DE ACEITAÇÃO
+12. DADOS A CONFIRMAR
+13. VISÃO CONCEITUAL
+14. FECHAMENTO COMERCIAL
+15. RECOMENDAÇÕES FINAIS
+
+ELEMENTOS VISUAIS OBRIGATÓRIOS:
+- Tabela comparativa executiva completa (3 opções + tabela de sensibilidade)
+- Matriz de risco 3x3 com plano de resposta
+- Diagrama de fluxo detalhado com tempos
+- Layout conceitual 2D esquemático com legenda
+- Tabela de critérios de aceitação
+- Caixa "DADOS A CONFIRMAR"
+- Placeholders <<IMAGEM:FLUXO_PROCESSO>>, <<IMAGEM:LAYOUT_CELULA>>, <<IMAGEM:CONCEITO_SOLUCAO>>, <<IMAGEM:DETALHE_FERRAMENTAL>>, <<IMAGEM:DIAGRAMA_ELETRICO>>`;
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -105,22 +139,59 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const userPrompt = `Gere a proposta técnica e comercial completa em HTML para o seguinte projeto:
+    const d = projectData;
+    const version = d.proposal_version || "Completa";
+    const versionInstructions = buildVersionInstructions(version);
 
-Tipo de aplicação: ${projectData.tipo_aplicacao}
-Produção desejada: ${projectData.producao} peças/hora
-Descrição da peça: ${projectData.peca}
-Peso da peça: ${projectData.peso} kg
-Dimensões: ${projectData.dimensoes || "Não informado"}
-Ambiente: ${projectData.ambiente}
-Nível de automação: ${projectData.automacao}
-Processo atual: ${projectData.processo_atual || "Não informado"}
-Objetivo do projeto: ${projectData.objetivo}
-Observações: ${projectData.observacoes || "Nenhuma"}
+    // Build data summary for the prompt
+    const dataLines = [
+      `Cliente: ${d.client_name}`,
+      `Título do Projeto: ${d.project_title}`,
+      `Descrição do Escopo: ${d.custom_scope_description}`,
+      `Versão da Proposta: ${version}`,
+      `Tipo de Aplicação: ${d.application_type}`,
+      d.production_target ? `Produção Desejada: ${d.production_target} peças/hora` : null,
+      d.target_cycle_time ? `Tempo de Ciclo Alvo: ${d.target_cycle_time} segundos` : null,
+      d.piece_weight ? `Peso da Peça: ${d.piece_weight} kg` : null,
+      d.piece_dimensions ? `Dimensões da Peça: ${d.piece_dimensions}` : null,
+      d.product_name ? `Nome do Produto: ${d.product_name}` : null,
+      d.material ? `Material: ${d.material}` : null,
+      d.surface_finish ? `Acabamento Superficial: ${d.surface_finish}` : null,
+      d.automation_level ? `Nível de Automação: ${d.automation_level}` : null,
+      d.operational_environment ? `Ambiente Operacional: ${d.operational_environment}` : null,
+      d.work_shifts ? `Turnos de Operação: ${d.work_shifts}` : null,
+      d.continuous_operation ? `Operação Contínua: Sim` : null,
+      d.operating_temperature ? `Temperatura de Operação: ${d.operating_temperature}` : null,
+      d.installation_area_size ? `Área Disponível: ${d.installation_area_size}` : null,
+      d.available_power_supply ? `Alimentação Elétrica: ${d.available_power_supply}` : null,
+      d.available_compressed_air ? `Ar Comprimido: ${d.available_compressed_air}` : null,
+      d.investment_range_basic ? `Faixa Investimento Básico: ${d.investment_range_basic}` : null,
+      d.investment_range_intermediate ? `Faixa Investimento Intermediário: ${d.investment_range_intermediate}` : null,
+      d.investment_range_optimized ? `Faixa Investimento Otimizado: ${d.investment_range_optimized}` : null,
+      d.observacoes ? `Observações: ${d.observacoes}` : null,
+    ].filter(Boolean).join("\n");
 
-Gere a proposta COMPLETA em HTML com todas as 15 seções obrigatórias, cálculos automáticos, detalhamento de serviços, estimativa de custos decomposta, gestão de riscos, critérios de aceitação e recomendações finais acionáveis.
+    const userPrompt = `Gere a proposta técnica e comercial em HTML para o seguinte projeto:
 
-IMPORTANTE: Diferencie claramente FATO, HIPÓTESE, PREMISSA e ESTIMATIVA. Declare incertezas e dados a confirmar. Apresente 3 alternativas de solução (Básica, Intermediária, Otimizada) antes de recomendar a melhor.`;
+${dataLines}
+
+INSTRUÇÕES DE VERSÃO:
+${versionInstructions}
+
+CAPA EXECUTIVA OBRIGATÓRIA:
+Inicie com uma capa executiva contendo: título "PROPOSTA TÉCNICA E COMERCIAL", título do projeto, versão selecionada, data atual, número da proposta (PROP-${new Date().getFullYear()}-001) e nome do cliente.
+
+ÍNDICE AUTOMÁTICO:
+Após a capa, inclua um índice com links para cada seção gerada.
+
+IMPORTANTE:
+- NÃO envolva o HTML em blocos de código markdown (sem \`\`\`html ou \`\`\`). Gere APENAS o HTML puro diretamente.
+- Diferencie claramente FATO, HIPÓTESE, PREMISSA e ESTIMATIVA
+- Declare incertezas e dados a confirmar
+- Apresente alternativas de solução antes de recomendar
+- Use os dados fornecidos para preencher tabelas, cálculos e estimativas
+- Se dados não foram informados, declare como "A CONFIRMAR" e inclua na seção de validações
+- Inclua rodapé profissional ao final`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
