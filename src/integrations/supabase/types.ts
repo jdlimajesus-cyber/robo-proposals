@@ -14,7 +14,111 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      companies: {
+        Row: {
+          address: string | null
+          company_type: string
+          contact_info: string | null
+          created_at: string
+          default_payment_terms: string | null
+          default_warranty_period: string | null
+          id: string
+          legal_name: string | null
+          logo_url: string | null
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          address?: string | null
+          company_type?: string
+          contact_info?: string | null
+          created_at?: string
+          default_payment_terms?: string | null
+          default_warranty_period?: string | null
+          id?: string
+          legal_name?: string | null
+          logo_url?: string | null
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string | null
+          company_type?: string
+          contact_info?: string | null
+          created_at?: string
+          default_payment_terms?: string | null
+          default_warranty_period?: string | null
+          id?: string
+          legal_name?: string | null
+          logo_url?: string | null
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      generated_documents: {
+        Row: {
+          client_id: string | null
+          company_id: string | null
+          created_at: string
+          document_type: string
+          document_version: string
+          generation_date: string
+          id: string
+          input_form_data: Json | null
+          output_file_name: string | null
+          output_html: string | null
+          project_title: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          client_id?: string | null
+          company_id?: string | null
+          created_at?: string
+          document_type?: string
+          document_version?: string
+          generation_date?: string
+          id?: string
+          input_form_data?: Json | null
+          output_file_name?: string | null
+          output_html?: string | null
+          project_title: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          client_id?: string | null
+          company_id?: string | null
+          created_at?: string
+          document_type?: string
+          document_version?: string
+          generation_date?: string
+          id?: string
+          input_form_data?: Json | null
+          output_file_name?: string | null
+          output_html?: string | null
+          project_title?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "generated_documents_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "generated_documents_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
