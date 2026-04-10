@@ -1,7 +1,21 @@
+export interface Company {
+  id: string;
+  company_type: "internal" | "customer";
+  name: string;
+  legal_name?: string;
+  address?: string;
+  contact_info?: string;
+  logo_url?: string;
+  default_payment_terms?: string;
+  default_warranty_period?: string;
+}
+
 export interface ProjectData {
   // Dados Gerais (Obrigatórios)
-  client_name: string;
+  company_internal_id: string;
+  client_id: string;
   project_title: string;
+  initial_objective: "Gerar Escopo Técnico" | "Gerar Proposta Técnica e Comercial";
   custom_scope_description: string;
   proposal_version: "Basica" | "Normal" | "Completa";
 
@@ -32,6 +46,31 @@ export interface ProjectData {
 
   // Legacy / extra
   observacoes?: string;
+
+  // Resolved data from DB (populated before sending to edge function)
+  company_name?: string;
+  client_name?: string;
+  client_legal_name?: string;
+  client_address?: string;
+  client_contact_info?: string;
+}
+
+export interface GeneratedDocument {
+  id: string;
+  company_id?: string;
+  client_id?: string;
+  project_title: string;
+  document_type: "proposta" | "escopo";
+  document_version: "Basica" | "Normal" | "Completa";
+  generation_date: string;
+  input_form_data: ProjectData;
+  output_html?: string;
+  output_file_name?: string;
+  status: "generated" | "editing" | "finalized";
+  created_at: string;
+  // joined
+  company?: Company;
+  client?: Company;
 }
 
 export type AppStep = "form" | "generating" | "preview";

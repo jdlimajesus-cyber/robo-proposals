@@ -7,6 +7,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { ProjectData } from "@/types/project";
+import { useCompanies } from "@/hooks/use-companies";
+import { CompanyDialog } from "@/components/CompanyDialog";
 import { Bot, Cog, Factory, Zap, ChevronDown, ChevronUp } from "lucide-react";
 
 interface ProjectFormProps {
@@ -30,14 +32,17 @@ const applicationTypes = [
   "Manipulação de Materiais",
   "Dosagem e Aplicação de Adesivos",
   "Manufatura Aditiva",
+  "Moldes de Injeção",
   "Outro",
 ];
 
 const automationLevels = ["Manual", "Semi-automático", "Totalmente automático"];
 
 const defaultData: ProjectData = {
-  client_name: "",
+  company_internal_id: "",
+  client_id: "",
   project_title: "",
+  initial_objective: "Gerar Proposta Técnica e Comercial",
   custom_scope_description: "",
   proposal_version: "Completa",
   application_type: "",
@@ -75,10 +80,29 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
   const [showInfra, setShowInfra] = useState(false);
   const [showCommercial, setShowCommercial] = useState(false);
 
+  const { companies: internalCompanies, addCompany: addInternal } = useCompanies("internal");
+  const { companies: customers, addCompany: addCustomer } = useCompanies("customer");
+
   // Auto-save to localStorage
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(formData));
   }, [formData]);
+
+  // Populate resolved names when selections change
+  useEffect(() => {
+    const internal = internalCompanies.find((c) => c.id === formData.company_internal_id);
+    const client = customers.find((c) => c.id === formData.client_id);
+    if (internal || client) {
+      setFormData((prev) => ({
+        ...prev,
+        company_name: internal?.name || prev.company_name,
+        client_name: client?.name || prev.client_name,
+        client_legal_name: client?.legal_name || prev.client_legal_name,
+        client_address: client?.address || prev.client_address,
+        client_contact_info: client?.contact_info || prev.client_contact_info,
+      }));
+    }
+  }, [formData.company_internal_id, formData.client_id, internalCompanies, customers]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,8 +113,11 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
+  const showVersionSelect = formData.initial_objective === "Gerar Proposta Técnica e Comercial";
+
   const isValid =
-    formData.client_name.trim() !== "" &&
+    formData.company_internal_id !== "" &&
+    formData.client_id !== "" &&
     formData.project_title.trim() !== "" &&
     formData.custom_scope_description.trim() !== "" &&
     formData.application_type !== "";
@@ -107,7 +134,7 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
             </h1>
           </div>
           <p className="text-primary-foreground/80 text-lg max-w-2xl mx-auto">
-            Geração inteligente de propostas técnicas e comerciais para células robotizadas e máquinas especiais
+            Geração inteligente de propostas técnicas e comerciais para automação industrial
           </p>
           <div className="flex items-center justify-center gap-6 mt-6 text-primary-foreground/70 text-sm">
             <span className="flex items-center gap-1"><Bot className="h-4 w-4" /> IA Integrada</span>
@@ -127,15 +154,74 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
               <h2 className="text-xl font-semibold text-foreground mb-4 flex items-center gap-2">
                 📋 Dados Gerais
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+              {/* Sua Empresa + Cliente */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 <div className="space-y-2">
-                  <Label>Nome do Cliente *</Label>
-                  <Input
-                    placeholder="Ex: Empresa ABC Ltda"
-                    value={formData.client_name}
-                    onChange={(e) => updateField("client_name", e.target.value)}
-                  />
+                  <Label>Sua Empresa *</Label>
+                  <div className="flex gap-2">
+                    <Select value={formData.company_internal_id} onValueChange={(v) => updateField("company_internal_id", v)}>
+                      <SelectTrigger className="flex-1"><SelectValue placeholder="Selecione sua empresa" /></SelectTrigger>
+                      <SelectContent>
+                        {internalCompanies.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <CompanyDialog type="internal" onSave={addInternal} />
+                  </div>
                 </div>
+                <div className="space-y-2">
+                  <Label>Cliente *</Label>
+                  <div className="flex gap-2">
+                    <Select value={formData.client_id} onValueChange={(v) => updateField("client_id", v)}>
+                      <SelectTrigger className="flex-1"><SelectValue placeholder="Selecione o cliente" /></SelectTrigger>
+                      <SelectContent>
+                        {customers.map((c) => (
+                          <SelectItem key={c.id} value={c.id}>{c.name}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <CompanyDialog type="customer" onSave={addCustomer} />
+                  </div>
+                </div>
+              </div>
+
+              {/* Objetivo + Versão */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
+                <div className="space-y-2">
+                  <Label>Objetivo *</Label>
+                  <Select
+                    value={formData.initial_objective}
+                    onValueChange={(v) => updateField("initial_objective", v)}
+                  >
+                    <SelectTrigger><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Gerar Escopo Técnico">Gerar Escopo Técnico</SelectItem>
+                      <SelectItem value="Gerar Proposta Técnica e Comercial">Gerar Proposta Técnica e Comercial</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {showVersionSelect && (
+                  <div className="space-y-2">
+                    <Label>Versão da Proposta *</Label>
+                    <Select
+                      value={formData.proposal_version}
+                      onValueChange={(v) => updateField("proposal_version", v)}
+                    >
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Basica">Básica (7 seções)</SelectItem>
+                        <SelectItem value="Normal">Normal (12 seções)</SelectItem>
+                        <SelectItem value="Completa">Completa (15 seções)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                )}
+              </div>
+
+              {/* Título + Tipo */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-4">
                 <div className="space-y-2">
                   <Label>Título do Projeto *</Label>
                   <Input
@@ -144,9 +230,6 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                     onChange={(e) => updateField("project_title", e.target.value)}
                   />
                 </div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
                 <div className="space-y-2">
                   <Label>Tipo de Aplicação *</Label>
                   <Select value={formData.application_type} onValueChange={(v) => updateField("application_type", v)}>
@@ -158,23 +241,9 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
-                  <Label>Versão da Proposta *</Label>
-                  <Select
-                    value={formData.proposal_version}
-                    onValueChange={(v) => updateField("proposal_version", v)}
-                  >
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="Basica">Básica (7 seções)</SelectItem>
-                      <SelectItem value="Normal">Normal (12 seções)</SelectItem>
-                      <SelectItem value="Completa">Completa (15 seções)</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
               </div>
 
-              <div className="mt-4 space-y-2">
+              <div className="space-y-2">
                 <Label>Descrição do Escopo *</Label>
                 <Textarea
                   placeholder="Descreva a aplicação solicitada, o processo atual e o objetivo do projeto..."
@@ -359,49 +428,51 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
             </div>
 
             {/* === SEÇÃO 4: DADOS COMERCIAIS (Colapsável) === */}
-            <div className="border border-border rounded-lg">
-              <button
-                type="button"
-                onClick={() => setShowCommercial(!showCommercial)}
-                className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors rounded-lg"
-              >
-                <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
-                  💰 Dados Comerciais <span className="text-sm font-normal text-muted-foreground">(Opcional)</span>
-                </h2>
-                {showCommercial ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
-              </button>
+            {showVersionSelect && (
+              <div className="border border-border rounded-lg">
+                <button
+                  type="button"
+                  onClick={() => setShowCommercial(!showCommercial)}
+                  className="w-full flex items-center justify-between p-4 text-left hover:bg-muted/50 transition-colors rounded-lg"
+                >
+                  <h2 className="text-lg font-semibold text-foreground flex items-center gap-2">
+                    💰 Dados Comerciais <span className="text-sm font-normal text-muted-foreground">(Opcional)</span>
+                  </h2>
+                  {showCommercial ? <ChevronUp className="h-5 w-5" /> : <ChevronDown className="h-5 w-5" />}
+                </button>
 
-              {showCommercial && (
-                <div className="px-4 pb-4 space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="space-y-2">
-                      <Label>Investimento Básico</Label>
-                      <Input
-                        placeholder="Ex: R$ 150.000 - R$ 250.000"
-                        value={formData.investment_range_basic ?? ""}
-                        onChange={(e) => updateField("investment_range_basic", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Investimento Intermediário</Label>
-                      <Input
-                        placeholder="Ex: R$ 300.000 - R$ 500.000"
-                        value={formData.investment_range_intermediate ?? ""}
-                        onChange={(e) => updateField("investment_range_intermediate", e.target.value)}
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Investimento Otimizado</Label>
-                      <Input
-                        placeholder="Ex: R$ 600.000 - R$ 900.000"
-                        value={formData.investment_range_optimized ?? ""}
-                        onChange={(e) => updateField("investment_range_optimized", e.target.value)}
-                      />
+                {showCommercial && (
+                  <div className="px-4 pb-4 space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="space-y-2">
+                        <Label>Investimento Básico</Label>
+                        <Input
+                          placeholder="Ex: R$ 150.000 - R$ 250.000"
+                          value={formData.investment_range_basic ?? ""}
+                          onChange={(e) => updateField("investment_range_basic", e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Investimento Intermediário</Label>
+                        <Input
+                          placeholder="Ex: R$ 300.000 - R$ 500.000"
+                          value={formData.investment_range_intermediate ?? ""}
+                          onChange={(e) => updateField("investment_range_intermediate", e.target.value)}
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Investimento Otimizado</Label>
+                        <Input
+                          placeholder="Ex: R$ 600.000 - R$ 900.000"
+                          value={formData.investment_range_optimized ?? ""}
+                          onChange={(e) => updateField("investment_range_optimized", e.target.value)}
+                        />
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
-            </div>
+                )}
+              </div>
+            )}
 
             {/* Observações */}
             <div className="space-y-2">
@@ -421,11 +492,14 @@ export function ProjectForm({ onSubmit, isLoading }: ProjectFormProps) {
             >
               {isLoading ? (
                 <span className="flex items-center gap-2">
-                  <Cog className="h-5 w-5 animate-spin" /> Gerando Proposta...
+                  <Cog className="h-5 w-5 animate-spin" /> Gerando...
                 </span>
               ) : (
                 <span className="flex items-center gap-2">
-                  <Zap className="h-5 w-5" /> Gerar Proposta Técnica e Comercial
+                  <Zap className="h-5 w-5" />
+                  {formData.initial_objective === "Gerar Escopo Técnico"
+                    ? "Gerar Escopo Técnico"
+                    : "Gerar Proposta Técnica e Comercial"}
                 </span>
               )}
             </Button>
