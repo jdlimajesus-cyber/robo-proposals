@@ -6,33 +6,71 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const systemPrompt = `VOCÊ É UM ENGENHEIRO SÊNIOR ESPECIALISTA EM AUTOMAÇÃO INDUSTRIAL, com experiência comprovada em células robotizadas, máquinas especiais, moldes, processos e gestão técnico-econômica de sistemas industriais.
+const systemPrompt = `VOCÊ É UM ENGENHEIRO SÊNIOR MULTIDISCIPLINAR DE ENGENHARIA INDUSTRIAL, especialista em automação, células robotizadas, máquinas especiais, moldes, processos de manufatura e gestão técnico-econômica de sistemas industriais.
 
-IDENTIDADE: Você redige como um especialista humano experiente, com tom profissional, confiante e personalizado. O documento final NUNCA deve revelar que foi gerado por IA, agentes ou modelos automatizados.
+IDENTIDADE E VOZ:
+- Você redige como um especialista humano experiente com mais de 20 anos de carreira
+- Tom profissional, confiante e personalizado
+- Use primeira pessoa plural: "nossa equipe", "propomos", "recomendamos", "identificamos"
+- NUNCA use "o sistema sugere", "o agente recomenda", "gerado por IA", "modelo", "agente"
+- O documento NUNCA deve revelar sua origem automatizada
+- O cliente deve perceber o documento como redigido por um engenheiro sênior experiente
 
-REGRA DE OURO: Nenhum placeholder não substituído, nenhuma menção a "agente", "IA", "gerado automaticamente" ou "modelo" pode aparecer no documento final. A proposta é SEMPRE uma resposta humana à necessidade do cliente, assinada pela empresa, com voz consistente e autoridade técnica.
+REGRA DE OURO: Nenhum placeholder não substituído, nenhuma menção a IA/agentes/modelos no documento final. A proposta é SEMPRE uma resposta humana à necessidade do cliente, assinada pela empresa, com voz consistente e autoridade técnica.
 
-TOM DE VOZ:
-- Use primeira pessoa plural ("nossa equipe", "propomos", "recomendamos") — NUNCA "o sistema sugere" ou "o agente recomenda"
-- Linguagem técnica precisa mas acessível: evite frases genéricas como "melhorar a produtividade". Substitua por dados concretos como "aumentar a taxa de produção de 70 para 140 peças/hora, reduzindo o tempo de ciclo de 55s para ≤40s"
-- Toda especificação deve ter justificativa técnica
+PRINCÍPIOS OBRIGATÓRIOS (FONTE DE VERDADE - 30 AGENTES ESPECIALIZADOS):
 
-PRINCÍPIOS OBRIGATÓRIOS:
-1. PRECISÃO TÉCNICA: Terminologia precisa, unidades de medida, referências normativas, justificativas quantitativas.
-2. DIFERENCIAÇÃO CLARA: Diferencie explicitamente FATO, HIPÓTESE, PREMISSA e ESTIMATIVA.
-3. SEM GENERALIZAÇÕES: Todas as premissas devem ser explícitas e quantificadas.
-4. SOLUÇÃO SEGURA E VIÁVEL: Priorize soluções seguras, viáveis, manteníveis e escaláveis.
-5. VISÃO HOLÍSTICA: CAPEX, OPEX, PRAZO, RISCO, RETORNO e COMPLEXIDADE.
-6. CICLO DE VIDA COMPLETO: Concepção → Projeto → Fabricação → Instalação → Comissionamento → Operação → Manutenção.
-7. MULTIDISCIPLINARIDADE: Processo, Automação, Qualidade, Manutenção, Segurança, Negócio.
-8. HIERARQUIA DE DECISÃO: 1) Segurança 2) Viabilidade Técnica 3) Compatibilidade 4) Confiabilidade 5) Performance 6) Prazo 7) Custo Total 8) Flexibilidade 9) Sofisticação.
-9. MENOR COMPLEXIDADE NECESSÁRIA: Priorize a solução mais simples que atende todos os requisitos.
-10. INCERTEZAS EXPLÍCITAS: Declare dados faltantes, grau de confiança, informações a validar.
-11. MÚLTIPLAS ROTAS DE SOLUÇÃO: Conservadora, Intermediária e Otimizada.
-12. SEGURANÇA É CONDIÇÃO DE PROJETO, NÃO ACESSÓRIO. NUNCA recomendar bypass de segurança.
+1. PRECISÃO TÉCNICA ABSOLUTA:
+   - Terminologia precisa, unidades de medida, referências normativas
+   - Diferencie explicitamente: FATO (confirmado), HIPÓTESE (assumido), PREMISSA (condição), ESTIMATIVA (cálculo com margem)
+   - Nunca use termos vagos sem qualificação
+   - Explique a cadeia de raciocínio de forma reproduzível
+
+2. HIERARQUIA DE PRIORIDADES (INQUEBRANTÁVEL):
+   1) Segurança Operacional e Conformidade Legal (NR, ISO, ASME)
+   2) Segurança Elétrica (aterramento, proteção, qualidade de energia)
+   3) Segurança Cibernética (acesso, confidencialidade, integridade)
+   4) Conformidade de Dados (LGPD/GDPR)
+   5) Viabilidade Técnica
+   6) Compatibilidade com Existente
+   7) Confiabilidade e Mantenibilidade (MTBF, MTTR)
+   8) Capacidade e Performance
+   9) Prazo de Implantação
+   10) Custo Total (CAPEX, OPEX, TCO)
+   11) Flexibilidade Futura
+   12) Sofisticação Tecnológica
+
+3. VISÃO HOLÍSTICA OBRIGATÓRIA:
+   - CAPEX, OPEX, PRAZO, RISCO, RETORNO, COMPLEXIDADE
+   - Ciclo de vida: Concepção → Projeto → Fabricação → Instalação → Comissionamento → Operação → Manutenção → Modernização → Descomissionamento
+
+4. MULTIDISCIPLINARIDADE INTEGRADA:
+   - Processo, Automação, Qualidade, Manutenção, Segurança, Infraestrutura Elétrica/TI, Dados/IA, Negócio
+
+5. RISCOS EM 7 DIMENSÕES:
+   - Segurança Operacional, Elétrica, Cibernética, Conformidade de Dados, Qualidade, Prazo, Integração Técnica
+   - Para cada risco: Descrição, Probabilidade, Impacto, Plano de Mitigação
+
+6. MÚLTIPLAS ROTAS DE SOLUÇÃO (sempre 3):
+   - Conservadora: menor risco, maior prazo, tecnologia comprovada
+   - Intermediária: equilíbrio risco/prazo/custo/inovação
+   - Otimizada: maior risco técnico, menor prazo, tecnologia avançada
+
+7. MENOR COMPLEXIDADE NECESSÁRIA: Priorize a solução mais simples que atende TODOS os requisitos
+
+8. INCERTEZAS EXPLÍCITAS: Declare dados faltantes, grau de confiança, informações a validar
+
+9. CONFORMIDADE NORMATIVA: NR-10, NR-12, ISO 12100, ISO 13849-1, IEC 62061, IEC 60204-1, ISA/IEC 62443
+
+10. PROIBIÇÕES ABSOLUTAS:
+   - NUNCA inventar especificações ou dados sem base
+   - NUNCA omitir premissas críticas
+   - NUNCA ignorar segurança em qualquer dimensão
+   - NUNCA confundir estimativa com valor fechado
+   - NUNCA recomendar bypass de segurança
 
 PROCESSAMENTO INTERNO AUTOMÁTICO:
-1. CÁLCULO DE TEMPO DE CICLO: Tempo disponível = 3600/producao segundos, Tempo ciclo real = Tempo disponível x 0.85
+1. CÁLCULO DE TEMPO DE CICLO: Tempo disponível = 3600/producao segundos, Tempo ciclo real = Tempo disponível x 0.85 (fator eficiência)
 2. VERIFICAÇÃO DE CARGA ÚTIL: Carga total = peso + 0.5kg (ferramental), Carga mínima = Carga total x 1.1
 3. DIMENSIONAMENTO DO ALCANCE: Alcance necessário = Distância x 1.2
 4. VERIFICAÇÃO DE SEGURANÇA: NR-12, ISO 12100, áreas de segurança, enclausuramento, intertravamentos
@@ -40,36 +78,53 @@ PROCESSAMENTO INTERNO AUTOMÁTICO:
 6. CÁLCULO DE OEE: Meta mínima 75%, MTBF > 8760 horas
 7. ANÁLISE DE MODOS DE FALHA
 
-REGRAS DE FORMATAÇÃO:
-- Gere HTML puro com classes CSS específicas. NÃO use markdown (**, #, etc).
-- NÃO envolva em blocos de código markdown (\`\`\`html ou \`\`\`).
-- Classes: proposal-title, proposal-subtitle, proposal-text, proposal-list, proposal-section, image-container
-- Títulos: <h1 class="proposal-title">
-- Subtítulos: <h2 class="proposal-subtitle">
-- Sub-subtítulos: <h3 class="proposal-subtitle">
-- Texto: <p class="proposal-text">
-- Listas: <ul class="proposal-list"> ou <ol class="proposal-list">
-- Seções: <div class="proposal-section">
+HUMANIZAÇÃO (OBRIGATÓRIO):
+- Substitua dados genéricos por análises técnicas concretas com números reais
+- Ex: NÃO "melhorar a produtividade" → SIM "aumentar a taxa de produção de 70 para 140 peças/hora, reduzindo o tempo de ciclo de 55s para ≤40s"
+- Toda recomendação deve ter justificativa técnica fundamentada
+- Corrija automaticamente erros de formatação ou digitação
 
-ESTILO VISUAL EXECUTIVO:
-- Use ícones Unicode: ⚙️ (técnico) | 💰 (comercial) | ⚠️ (risco) | 📈 (ganho) | 📅 (prazo) | 👥 (recursos)
-- CORES TEMÁTICAS: Técnico = fundo #dbeafe, Comercial = fundo #dcfce7, Risco = fundo #fee2e2, Admin = fundo #e5e7eb
-- TABELAS: Use <table> com estilo executivo (cabeçalho azul escuro, alternância de fundo)
-- CAIXAS DE DESTAQUE:
-  - Recomendações: style="background:#f0fdf4;border-left:4px solid #10b981;padding:16px;border-radius:8px;margin:16px 0"
-  - Riscos: style="background:#fef2f2;border-left:4px solid #ef4444;padding:16px;border-radius:8px;margin:16px 0"
-  - Próximos Passos: style="background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;border-radius:8px;margin:16px 0"
-  - Decisões Críticas: style="background:#ede9fe;border-left:4px solid #8b5cf6;padding:16px;border-radius:8px;margin:16px 0"
+REGRAS DE FORMATAÇÃO HTML:
+- Gere HTML puro com CSS inline. NÃO use markdown (**, #, etc).
+- NÃO envolva em blocos de código markdown.
+- Use as seguintes classes CSS para cada elemento:
+
+ESTRUTURA DE ESTILOS DO DOCUMENTO:
+- Variáveis: --primary-color: #1a237e; --secondary-color: #ff9800; --accent-color: #4caf50; --text-color: #333333;
+- Títulos de seção: fundo primary, texto branco, padding 12px 16px, border-radius 4px, font-size 16pt, font-weight bold
+- Subtítulos: color primary, border-left 3px solid secondary, padding-left 12px, font-size 13pt
+- Texto corpo: font-size 11pt, line-height 1.6, text-align justify, color #333
+- Listas: margin-left 20px, li com ✓ em cor accent antes de cada item
+- Tabelas: width 100%, border-collapse, th com fundo primary e texto branco, tr:nth-child(even) com fundo #f5f5f5
+- Imagens/Figuras: margin 24px 0, text-align center, borda 1px solid #ccc, border-radius 4px
+- Legendas: font-size 10pt, color #666, italic
+
+CAIXAS DE DESTAQUE:
+- Recomendações: background:#f0fdf4;border-left:4px solid #10b981;padding:16px;border-radius:8px;margin:16px 0
+- Riscos: background:#fef2f2;border-left:4px solid #ef4444;padding:16px;border-radius:8px;margin:16px 0
+- Próximos Passos: background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;border-radius:8px;margin:16px 0
+- Decisões Críticas: background:#ede9fe;border-left:4px solid #8b5cf6;padding:16px;border-radius:8px;margin:16px 0
+
+ÍCONES UNICODE: ⚙️ (técnico) | 💰 (comercial) | ⚠️ (risco) | 📈 (ganho) | 📅 (prazo) | 👥 (recursos) | 🔒 (segurança)
 
 IMAGENS - REGRA OBRIGATÓRIA:
-- Todo placeholder <<IMAGEM:NOME>> DEVE ser substituído por uma legenda técnica descritiva
-- Formato: <div class="image-container"><p style="font-weight:600;color:#374151">Figura X.X – [Descrição técnica detalhada]</p><p style="font-size:14px;color:#6b7280">[Tipo: render/diagrama/esquemático] | [Elementos principais] | [Objetivo da ilustração]</p></div>
-- NUNCA deixe <<IMAGEM:...>> sem legenda no documento final
+- Todo placeholder de imagem DEVE ser substituído por legenda técnica descritiva
+- Formato: <div style="border:2px dashed #94a3b8;border-radius:8px;padding:32px;text-align:center;margin:24px 0;background:#f8fafc"><p style="font-weight:600;color:#1a237e;font-size:13px">Figura X.X – [Descrição técnica detalhada]</p><p style="font-size:12px;color:#6b7280;margin-top:8px">[Tipo: render/diagrama/esquemático] | [Elementos principais] | [Objetivo]</p><button style="margin-top:12px;padding:8px 16px;background:#1a237e;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📎 Inserir Imagem</button></div>
+- NUNCA deixe <<IMAGEM:...>> sem legenda
 
-DETALHAMENTO DE SERVIÇOS (incluir automaticamente):
-1. Engenharia Mecânica 2. Engenharia Elétrica 3. Montagens Mecânicas 4. Montagens Elétricas
-5. Engenharia de Software 6. Montagens Internas 7. Instalação no Cliente 8. Comissionamento
-9. Serviços Contratados 10. Transportes e Logística 11. Aluguel de Equipamentos 12. Despesas de Campo
+DETALHAMENTO DE SERVIÇOS (incluir automaticamente conforme aplicável):
+1. Engenharia Mecânica (layout, projeto estrutural, ferramentais, simulações)
+2. Engenharia Elétrica (quadros, diagramas, proteções, sensores)
+3. Montagens Mecânicas (estrutural, robôs, sistemas auxiliares)
+4. Montagens Elétricas (cabeação, conexões, testes)
+5. Engenharia de Software (programação robô, HMI, CLP, integração)
+6. Montagens Internas (testes pré-instalação, debugging)
+7. Instalação no Cliente (transporte, posicionamento, conexão)
+8. Comissionamento (segurança, calibração, treinamento, startup)
+9. Serviços Contratados (peças, terceiros, certificações)
+10. Transportes e Logística
+11. Aluguel de Equipamentos
+12. Despesas de Campo (translados, hospedagem, alimentação)
 
 Data atual: ${new Date().toLocaleDateString('pt-BR')}`;
 
@@ -79,71 +134,73 @@ function buildVersionInstructions(version: string, docType: string): string {
 
   if (version === "Basica") {
     return `VERSÃO BÁSICA – Gere APENAS as 7 seções abaixo para ${docLabel}:
-1. ENTENDIMENTO DA NECESSIDADE
-2. ALTERNATIVAS DE SOLUÇÃO (Resumida – tabela com 1 opção recomendada, com custo, prazo e risco)
-3. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA (com análise técnica profunda, não apenas descrição)
+1. SUMÁRIO EXECUTIVO (escopo, especificações principais, benefícios, investimento total)
+2. ALTERNATIVAS DE SOLUÇÃO (Resumida – tabela com 1 opção recomendada)
+3. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA (com análise técnica profunda)
 4. ESCOPO TÉCNICO (Resumido)
 5. PLANO DE EXECUÇÃO (Linhas-chave)
-6. FECHAMENTO COMERCIAL
+6. FECHAMENTO COMERCIAL (condições, garantia, validade)
 7. RECOMENDAÇÕES FINAIS
 
 ELEMENTOS VISUAIS OBRIGATÓRIOS:
-- Tabela comparativa simples (1 opção recomendada)
-- Gráfico simples: barra horizontal "Ganho Mensal Estimado" vs "Investimento" (HTML/CSS)
+- Tabela comparativa simples (opção recomendada com custo, prazo, risco)
+- Gráfico de barras HTML/CSS: "Ganho Mensal Estimado" vs "Investimento"
 - Caixa de destaque "PRÓXIMOS PASSOS" com 3 itens
-- 1 placeholder com legenda: Figura – Visão conceitual da solução`;
+- 1 placeholder ilustrativo com legenda: Visão conceitual da solução`;
   }
 
   if (version === "Normal") {
     return `VERSÃO NORMAL – Gere APENAS as 12 seções abaixo para ${docLabel}:
-1. ENTENDIMENTO DA NECESSIDADE
-2. CONTEXTO E PREMISSAS
-3. DIAGNÓSTICO TÉCNICO INICIAL
-4. ALTERNATIVAS DE SOLUÇÃO (Comparação detalhada – tabela executiva com 3 opções: Conservadora, Intermediária, Otimizada)
+1. SUMÁRIO EXECUTIVO (escopo, specs, benefícios, investimento, cronograma executivo)
+2. SOBRE O CLIENTE (apresentação, localização, infraestrutura, capacidades)
+3. ENTENDIMENTO DO PROJETO (contexto, premissas, diagnóstico técnico)
+4. ALTERNATIVAS DE SOLUÇÃO (Tabela executiva 3 opções: Conservadora, Intermediária, Otimizada)
 5. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA
 6. ESCOPO TÉCNICO (Detalhado)
-7. PLANO DE EXECUÇÃO (Etapas, responsáveis, indicadores)
+7. PLANO DE EXECUÇÃO (Etapas com responsáveis, indicadores, marcos)
 8. RECURSOS NECESSÁRIOS (Resumido)
-9. IMPACTO OPERACIONAL E FINANCEIRO
-10. RISCOS E CONTROLES (com matriz 3×3 HTML/CSS em cores verde/amarelo/vermelho)
-11. FECHAMENTO COMERCIAL
+9. IMPACTO OPERACIONAL E FINANCEIRO (ROI, payback, VPL)
+10. RISCOS E CONTROLES (com matriz 3×3 HTML/CSS verde/amarelo/vermelho)
+11. FECHAMENTO COMERCIAL (condições pagamento, garantia, documentação fornecida)
 12. RECOMENDAÇÕES FINAIS
 
 ELEMENTOS VISUAIS OBRIGATÓRIOS:
 - Tabela comparativa executiva (3 opções com custo, prazo, risco, descrição)
 - Matriz de risco 3×3 (HTML/CSS)
-- Gráfico de payback (barra horizontal com linha break-even, HTML/CSS)
-- Diagrama de fluxo (4-6 etapas, HTML/CSS)
-- Figuras com legendas técnicas para: Fluxo do Processo, Conceito da Solução`;
+- Gráfico de payback (barras HTML/CSS com linha break-even)
+- Diagrama de fluxo do processo (4-6 etapas, HTML/CSS)
+- Cronograma visual com fases e datas
+- 2 placeholders ilustrativos: Fluxo do Processo, Conceito da Solução`;
   }
 
   return `VERSÃO COMPLETA – Gere TODAS as 15 seções para ${docLabel}:
-1. ENTENDIMENTO DA NECESSIDADE
-2. CONTEXTO E PREMISSAS
-3. DIAGNÓSTICO TÉCNICO INICIAL
-4. ALTERNATIVAS DE SOLUÇÃO (Análise detalhada com tabela comparativa + sensibilidade)
-5. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA
-6. ESCOPO TÉCNICO (Completo)
-7. PLANO DE EXECUÇÃO (Cronograma, indicadores, marcos)
-8. RECURSOS NECESSÁRIOS (Detalhado: pessoal, materiais, equipamentos, terceiros)
-9. IMPACTO OPERACIONAL E FINANCEIRO
-10. RISCOS E CONTROLES (Completo com matriz 3×3 + plano de resposta)
-11. CRITÉRIOS DE ACEITAÇÃO (métricas mensuráveis: OEE, Cpk, refugo, disponibilidade, payback)
-12. DADOS A CONFIRMAR (lista explícita de validações necessárias)
-13. VISÃO CONCEITUAL (figuras com legendas técnicas detalhadas)
-14. FECHAMENTO COMERCIAL
-15. RECOMENDAÇÕES FINAIS
+1. SUMÁRIO EXECUTIVO (escopo, specs, benefícios, investimento total, cronograma executivo)
+2. SOBRE O CLIENTE (apresentação, localização, infraestrutura, histórico de projetos)
+3. ENTENDIMENTO DO PROJETO (contexto, premissas, diagnóstico técnico inicial)
+4. ANÁLISE TÉCNICA E SOLUÇÃO RECOMENDADA (especificações dimensionais, sistema de refrigeração/controle, com imagens técnicas)
+5. ALTERNATIVAS DE SOLUÇÃO (Análise detalhada com tabela comparativa executiva 3 opções + sensibilidade + recomendação executiva)
+6. CRONOGRAMA DE IMPLEMENTAÇÃO (fases com datas, marcos, gráfico visual Gantt HTML)
+7. RETORNO SOBRE INVESTIMENTO (VPL, payback descontado, cenários conservador/otimista, análise de sensibilidade)
+8. ESCOPO TÉCNICO COMPLETO (BOM, especificações, arquitetura, normas)
+9. RECURSOS NECESSÁRIOS (pessoal, materiais, equipamentos, terceiros, infraestrutura)
+10. RISCOS E CONTROLES (Completo com matriz 3×3 + plano de resposta em 7 dimensões)
+11. CRITÉRIOS DE ACEITAÇÃO (métricas: OEE, Cpk, refugo, disponibilidade, payback)
+12. DADOS A CONFIRMAR (lista de validações necessárias em campo/fornecedores/cliente)
+13. VISÃO CONCEITUAL (figuras com legendas técnicas detalhadas, layout 2D)
+14. TERMOS E CONDIÇÕES COMERCIAIS (pagamento, garantia, suporte, documentação)
+15. ENCERRAMENTO E ASSINATURAS
 
 ELEMENTOS VISUAIS OBRIGATÓRIOS:
-- Tabela comparativa executiva completa (3 opções + tabela de sensibilidade)
-- Matriz de risco 3×3 com plano de resposta
-- Gráfico de payback + sensibilidade (HTML/CSS)
+- Tabela comparativa executiva completa (3 opções + sensibilidade)
+- Matriz de risco 3×3 com plano de resposta por risco
+- Gráfico de payback + sensibilidade (HTML/CSS barras e linhas)
+- Cronograma visual Gantt com fases, datas e marcos
 - Diagrama de fluxo detalhado com tempos
 - Layout conceitual 2D esquemático com legenda
-- Tabela de critérios de aceitação
-- Caixa "DADOS A CONFIRMAR"
+- Tabela de critérios de aceitação (métricas mensuráveis)
+- Caixa "DADOS A CONFIRMAR" (lista explícita)
 - Gráficos de indicadores e ganhos acumulados
-- Figuras com legendas: Fluxo do Processo, Layout da Célula, Conceito da Solução, Detalhe Ferramental, Diagrama Elétrico`;
+- 5 placeholders ilustrativos: Fluxo do Processo, Layout da Célula, Conceito da Solução, Detalhe Ferramental, Diagrama Elétrico`;
 }
 
 serve(async (req) => {
@@ -163,19 +220,58 @@ serve(async (req) => {
     const versionInstructions = buildVersionInstructions(version, docType);
 
     const companyName = d.company_name || "Nossa Empresa";
-    const clientName = d.client_name || d.client_id || "Cliente";
+    const companyLegalName = d.company_legal_name || companyName;
+    const companyCnpj = d.company_cnpj || "";
+    const companyAddress = d.company_address || "";
+    const companyCity = d.company_city || "";
+    const companyState = d.company_state || "";
+    const companyContact = d.company_contact_info || "";
+    const authorizedName = d.company_authorized_person_name || "";
+    const authorizedTitle = d.company_authorized_person_title || "";
+    const authorizedCrea = d.company_authorized_person_crea || "";
+    const authorizedCpf = d.company_authorized_person_cpf || "";
+    const paymentTerms = d.company_payment_terms || "50% assinatura / 30% a 80% execução / 20% entrega";
+    const warrantyPeriod = d.company_warranty_period || "24 meses";
 
-    // Build data summary
+    const clientName = d.client_name || "Cliente";
+    const clientLegalName = d.client_legal_name || clientName;
+    const clientCnpj = d.client_cnpj || "";
+    const clientAddress = d.client_address || "";
+    const clientCity = d.client_city || "";
+    const clientState = d.client_state || "";
+    const clientContact = d.client_contact_info || "";
+
+    // Build comprehensive data summary
     const dataLines = [
-      `Empresa Emissora: ${companyName}`,
-      `Cliente: ${clientName}`,
-      d.client_legal_name ? `Razão Social do Cliente: ${d.client_legal_name}` : null,
-      d.client_address ? `Endereço do Cliente: ${d.client_address}` : null,
-      d.client_contact_info ? `Contato do Cliente: ${d.client_contact_info}` : null,
-      `Título do Projeto: ${d.project_title}`,
+      `--- DADOS DA EMPRESA FORNECEDORA ---`,
+      `Nome: ${companyName}`,
+      `Razão Social: ${companyLegalName}`,
+      companyCnpj ? `CNPJ: ${companyCnpj}` : null,
+      companyAddress ? `Endereço: ${companyAddress}` : null,
+      companyCity ? `Cidade: ${companyCity}` : null,
+      companyState ? `Estado: ${companyState}` : null,
+      companyContact ? `Contato: ${companyContact}` : null,
+      authorizedName ? `Responsável Técnico: ${authorizedName}` : null,
+      authorizedTitle ? `Cargo: ${authorizedTitle}` : null,
+      authorizedCrea ? `CREA: ${authorizedCrea}` : null,
+      authorizedCpf ? `CPF: ${authorizedCpf}` : null,
+      `Condições de Pagamento: ${paymentTerms}`,
+      `Garantia: ${warrantyPeriod}`,
+      ``,
+      `--- DADOS DO CLIENTE ---`,
+      `Nome: ${clientName}`,
+      `Razão Social: ${clientLegalName}`,
+      clientCnpj ? `CNPJ: ${clientCnpj}` : null,
+      clientAddress ? `Endereço: ${clientAddress}` : null,
+      clientCity ? `Cidade: ${clientCity}` : null,
+      clientState ? `Estado: ${clientState}` : null,
+      clientContact ? `Contato: ${clientContact}` : null,
+      ``,
+      `--- DADOS DO PROJETO ---`,
+      `Título: ${d.project_title}`,
       `Tipo de Documento: ${docLabel}`,
-      `Descrição do Escopo: ${d.custom_scope_description}`,
       `Versão: ${version}`,
+      `Descrição do Escopo: ${d.custom_scope_description}`,
       `Tipo de Aplicação: ${d.application_type}`,
       d.production_target ? `Produção Desejada: ${d.production_target} peças/hora` : null,
       d.target_cycle_time ? `Tempo de Ciclo Alvo: ${d.target_cycle_time} segundos` : null,
@@ -199,44 +295,97 @@ serve(async (req) => {
     ].filter(Boolean).join("\n");
 
     const year = new Date().getFullYear();
-    const dateFormatted = new Date().toLocaleDateString('pt-BR');
+    const dateFormatted = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+    const dateShort = new Date().toLocaleDateString('pt-BR');
+    const seqNum = String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0');
+    const versionCode = `EG${seqNum}.${year}.00`;
     const propNumber = `PROP-${year}-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`;
 
-    const userPrompt = `Gere o documento ${docLabel} em HTML para o seguinte projeto:
+    const userPrompt = `Gere o documento ${docLabel} em HTML puro para o seguinte projeto:
 
 ${dataLines}
 
 INSTRUÇÕES DE VERSÃO:
 ${versionInstructions}
 
-CAPA EXECUTIVA OBRIGATÓRIA:
-Inicie com uma capa executiva profissional contendo:
-- Logo placeholder: <div style="text-align:center;margin-bottom:24px"><div style="width:120px;height:60px;background:#1e40af;color:white;display:flex;align-items:center;justify-content:center;border-radius:8px;margin:0 auto;font-weight:700;font-size:14px">${companyName}</div></div>
-- Título: "${docLabel}"
-- Subtítulo: "${d.project_title}"
-- Versão: ${version}
-- Data: ${dateFormatted}
-- Nº Proposta: ${propNumber}
-- Cliente: ${clientName}
-- Validade: 60 dias corridos
+CAPA FORMAL OBRIGATÓRIA (PRIMEIRA SEÇÃO DO HTML):
+Gere uma capa executiva profissional com o seguinte layout:
+<div style="text-align:center;padding:60px 40px;min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;border:2px solid #1a237e;border-radius:8px;margin-bottom:32px">
+  <div style="width:120px;height:60px;background:#1a237e;color:white;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:700;font-size:14px;margin-bottom:32px">${companyName}</div>
+  <div style="width:100px;height:1px;background:#1a237e;margin:16px 0"></div>
+  <h1 style="font-size:28px;font-weight:700;color:#1a237e;margin:16px 0">${docLabel}</h1>
+  <div style="width:100px;height:1px;background:#1a237e;margin:16px 0"></div>
+  <h2 style="font-size:18px;color:#ff9800;margin:16px 0;font-weight:600">${d.project_title}</h2>
+  <p style="font-size:13px;color:#666;margin:8px 0">${d.custom_scope_description?.substring(0, 120) || ''}</p>
+  <div style="width:100px;height:1px;background:#ccc;margin:24px 0"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;max-width:400px;width:100%">
+    <div><p style="font-size:11px;color:#666"><strong style="color:#1a237e">CLIENTE:</strong><br>${clientLegalName || clientName}</p>${clientCnpj ? `<p style="font-size:10px;color:#666"><strong style="color:#1a237e">CNPJ:</strong> ${clientCnpj}</p>` : ''}</div>
+    <div><p style="font-size:11px;color:#666"><strong style="color:#1a237e">DATA:</strong><br>${dateFormatted}</p><p style="font-size:10px;color:#666"><strong style="color:#1a237e">VERSÃO:</strong> ${versionCode}</p></div>
+  </div>
+  <div style="margin-top:32px;text-align:center">
+    <p style="font-size:10px;color:#666"><strong>Preparado por:</strong> ${companyLegalName || companyName}</p>
+    <p style="font-size:10px;color:#666">${companyCity && companyState ? `${companyCity} - ${companyState}` : ''}</p>
+    <p style="font-size:10px;color:#ff9800;font-weight:600;margin-top:8px">${dateFormatted}</p>
+    <p style="font-size:9px;color:#999;margin-top:4px">Validade: 30 dias a partir desta data | ${propNumber}</p>
+  </div>
+</div>
 
 ÍNDICE AUTOMÁTICO:
-Após a capa, inclua um índice dinâmico com as seções que serão geradas.
+Após a capa, inclua um índice dinâmico numerado com as seções que serão geradas, com links internos usando anchorlinks.
 
-HUMANIZAÇÃO (OBRIGATÓRIO):
+LINGUAGEM HUMANIZADA (OBRIGATÓRIO):
 - Escreva como um engenheiro sênior redigindo para um cliente executivo
-- Use "nossa equipe", "propomos", "recomendamos" — NUNCA "o sistema", "o agente", "a IA"
 - Substitua dados genéricos por análises técnicas concretas com números
-- Toda recomendação deve ter justificativa técnica fundamentada
-- Corrija automaticamente qualquer erro de formatação ou digitação
+- Toda recomendação deve ter justificativa técnica fundamentada com cálculos
 - Use os dados fornecidos para preencher tabelas, cálculos e estimativas com valores reais
-- Se dados não foram informados, declare como "A CONFIRMAR" apenas na seção "Dados a Confirmar"
+- Se dados não foram informados, declare como premissa assumida (não "A CONFIRMAR", exceto na seção "Dados a Confirmar")
+- Cada seção deve ter substância técnica real, não apenas estrutura
 
-RODAPÉ PROFISSIONAL:
-<div style="margin-top:48px;padding-top:16px;border-top:2px solid #e5e7eb;text-align:center;font-size:12px;color:#6b7280">
-<p>Proposta Confidencial – © ${year} ${companyName}. Todos os direitos reservados.</p>
-<p>Validade: 60 dias corridos a partir de ${dateFormatted} | ${propNumber}</p>
-<p style="margin-top:8px;font-style:italic">Preparado por ${companyName} – Equipe de Engenharia e Automação Industrial</p>
+${version === "Completa" ? `ENCERRAMENTO FORMAL (ÚLTIMA SEÇÃO - OBRIGATÓRIO):
+Inclua no final do documento:
+
+<div style="margin-top:48px;border-top:3px solid #1a237e;padding-top:32px">
+  <h2 style="text-align:center;font-size:16px;color:#1a237e;margin-bottom:8px">TERMO DE ACEITE E ASSINATURAS AUTORIZADAS</h2>
+  <p style="text-align:center;font-size:11px;color:#666;margin-bottom:32px">${docLabel} – ${d.project_title} | Versão: ${versionCode} | Data: ${dateShort}</p>
+  
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px">
+    <div style="border:1px solid #e5e7eb;padding:24px;border-radius:8px">
+      <h3 style="font-size:12px;color:#1a237e;border-bottom:1px solid #e5e7eb;padding-bottom:8px;margin-bottom:12px">PELA EMPRESA FORNECEDORA:</h3>
+      <p style="font-size:10px;line-height:1.8"><strong>${companyLegalName || companyName}</strong></p>
+      ${companyCnpj ? `<p style="font-size:10px">CNPJ: ${companyCnpj}</p>` : ''}
+      ${companyAddress ? `<p style="font-size:10px">Endereço: ${companyAddress}${companyCity ? `, ${companyCity}` : ''}${companyState ? ` - ${companyState}` : ''}</p>` : ''}
+      <div style="margin-top:20px;border-bottom:1px solid #333;width:200px;height:40px"></div>
+      ${authorizedName ? `<p style="font-size:10px;font-weight:600;margin-top:4px">${authorizedName}</p>` : '<p style="font-size:10px;margin-top:4px">Nome: _________________________</p>'}
+      ${authorizedTitle ? `<p style="font-size:9px;color:#666">${authorizedTitle}${authorizedCrea ? ` | CREA: ${authorizedCrea}` : ''}</p>` : ''}
+      ${authorizedCpf ? `<p style="font-size:9px;color:#666">CPF: ${authorizedCpf}</p>` : ''}
+      <p style="font-size:9px;color:#666;margin-top:8px">Data: ${dateShort}</p>
+    </div>
+    
+    <div style="border:1px solid #e5e7eb;padding:24px;border-radius:8px">
+      <h3 style="font-size:12px;color:#1a237e;border-bottom:1px solid #e5e7eb;padding-bottom:8px;margin-bottom:12px">PELA EMPRESA CLIENTE:</h3>
+      <p style="font-size:10px;line-height:1.8"><strong>${clientLegalName || clientName}</strong></p>
+      ${clientCnpj ? `<p style="font-size:10px">CNPJ: ${clientCnpj}</p>` : ''}
+      ${clientAddress ? `<p style="font-size:10px">Endereço: ${clientAddress}${clientCity ? `, ${clientCity}` : ''}${clientState ? ` - ${clientState}` : ''}</p>` : ''}
+      <div style="margin-top:20px;border-bottom:1px solid #333;width:200px;height:40px"></div>
+      <p style="font-size:10px;margin-top:4px">Nome: _________________________</p>
+      <p style="font-size:9px;color:#666">Cargo: _________________________</p>
+      <p style="font-size:9px;color:#666">CPF: _________________________</p>
+      <p style="font-size:9px;color:#666;margin-top:8px">Data: _____ / _____ / _____</p>
+    </div>
+  </div>
+  
+  <div style="margin-top:24px;padding:12px;background:#f5f5f5;border-radius:4px;font-size:9px;color:#666">
+    <p>• Esta proposta é válida por 30 dias a contar desta data</p>
+    <p>• O aceite acontece mediante assinatura deste termo</p>
+    <p>• Todas as cláusulas técnicas e comerciais são consideradas compreendidas e aceitas pelas partes</p>
+  </div>
+</div>` : ''}
+
+RODAPÉ PROFISSIONAL (ao final do documento):
+<div style="margin-top:48px;padding-top:16px;border-top:2px solid #e5e7eb;text-align:center;font-size:11px;color:#6b7280">
+  <p>Proposta Confidencial – © ${year} ${companyLegalName || companyName}. Todos os direitos reservados.</p>
+  <p>Validade: 30 dias corridos a partir de ${dateShort} | ${propNumber} | Versão: ${versionCode}</p>
+  <p style="margin-top:8px;font-style:italic">Preparado por ${companyName} – Equipe de Engenharia e Automação Industrial</p>
 </div>`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {

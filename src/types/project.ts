@@ -3,11 +3,19 @@ export interface Company {
   company_type: "internal" | "customer";
   name: string;
   legal_name?: string;
+  cnpj?: string;
   address?: string;
+  city?: string;
+  state?: string;
   contact_info?: string;
   logo_url?: string;
   default_payment_terms?: string;
   default_warranty_period?: string;
+  authorized_person_name?: string;
+  authorized_person_title?: string;
+  authorized_person_crea?: string;
+  authorized_person_cpf?: string;
+  signature_image_url?: string;
 }
 
 export interface ProjectData {
@@ -49,9 +57,26 @@ export interface ProjectData {
 
   // Resolved data from DB (populated before sending to edge function)
   company_name?: string;
+  company_legal_name?: string;
+  company_cnpj?: string;
+  company_address?: string;
+  company_city?: string;
+  company_state?: string;
+  company_contact_info?: string;
+  company_logo_url?: string;
+  company_authorized_person_name?: string;
+  company_authorized_person_title?: string;
+  company_authorized_person_crea?: string;
+  company_authorized_person_cpf?: string;
+  company_signature_image_url?: string;
+  company_payment_terms?: string;
+  company_warranty_period?: string;
   client_name?: string;
   client_legal_name?: string;
+  client_cnpj?: string;
   client_address?: string;
+  client_city?: string;
+  client_state?: string;
   client_contact_info?: string;
 }
 
