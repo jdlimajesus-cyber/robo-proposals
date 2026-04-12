@@ -17,6 +17,12 @@ export type Database = {
       companies: {
         Row: {
           address: string | null
+          authorized_person_cpf: string | null
+          authorized_person_crea: string | null
+          authorized_person_name: string | null
+          authorized_person_title: string | null
+          city: string | null
+          cnpj: string | null
           company_type: string
           contact_info: string | null
           created_at: string
@@ -26,10 +32,18 @@ export type Database = {
           legal_name: string | null
           logo_url: string | null
           name: string
+          signature_image_url: string | null
+          state: string | null
           updated_at: string
         }
         Insert: {
           address?: string | null
+          authorized_person_cpf?: string | null
+          authorized_person_crea?: string | null
+          authorized_person_name?: string | null
+          authorized_person_title?: string | null
+          city?: string | null
+          cnpj?: string | null
           company_type?: string
           contact_info?: string | null
           created_at?: string
@@ -39,10 +53,18 @@ export type Database = {
           legal_name?: string | null
           logo_url?: string | null
           name: string
+          signature_image_url?: string | null
+          state?: string | null
           updated_at?: string
         }
         Update: {
           address?: string | null
+          authorized_person_cpf?: string | null
+          authorized_person_crea?: string | null
+          authorized_person_name?: string | null
+          authorized_person_title?: string | null
+          city?: string | null
+          cnpj?: string | null
           company_type?: string
           contact_info?: string | null
           created_at?: string
@@ -52,6 +74,8 @@ export type Database = {
           legal_name?: string | null
           logo_url?: string | null
           name?: string
+          signature_image_url?: string | null
+          state?: string | null
           updated_at?: string
         }
         Relationships: []
