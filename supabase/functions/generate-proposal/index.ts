@@ -84,33 +84,92 @@ HUMANIZAÇÃO (OBRIGATÓRIO):
 - Toda recomendação deve ter justificativa técnica fundamentada
 - Corrija automaticamente erros de formatação ou digitação
 
-REGRAS DE FORMATAÇÃO HTML:
+=== REGRAS DE FORMATAÇÃO HTML E DIAGRAMAÇÃO A4 ===
+
+REGRA CRÍTICA: O HTML gerado DEVE ser otimizado para impressão/exportação em formato A4.
 - Gere HTML puro com CSS inline. NÃO use markdown (**, #, etc).
 - NÃO envolva em blocos de código markdown.
-- Use as seguintes classes CSS para cada elemento:
+
+CONTROLE DE PAGINAÇÃO (OBRIGATÓRIO):
+- Cada SEÇÃO PRINCIPAL (H1 com fundo azul) deve iniciar em nova página. Use: style="page-break-before: always;"
+- Tabelas: NUNCA quebrar no meio. Use style="page-break-inside: avoid;" em TODAS as tabelas.
+- Listas: Manter juntas. Use style="page-break-inside: avoid;" em <ul> e <ol>.
+- Imagens/Figuras: NUNCA dividir. Use style="page-break-inside: avoid;" em containers de imagens.
+- Títulos (H2, H3): NUNCA deixar sozinhos no final da página. Use style="page-break-after: avoid;"
+- Caixas de destaque: Manter inteiras. Use style="page-break-inside: avoid;"
+- Blocos de assinatura: NUNCA dividir entre páginas.
 
 ESTRUTURA DE ESTILOS DO DOCUMENTO:
 - Variáveis: --primary-color: #1a237e; --secondary-color: #ff9800; --accent-color: #4caf50; --text-color: #333333;
-- Títulos de seção: fundo primary, texto branco, padding 12px 16px, border-radius 4px, font-size 16pt, font-weight bold
-- Subtítulos: color primary, border-left 3px solid secondary, padding-left 12px, font-size 13pt
-- Texto corpo: font-size 11pt, line-height 1.6, text-align justify, color #333
-- Listas: margin-left 20px, li com ✓ em cor accent antes de cada item
-- Tabelas: width 100%, border-collapse, th com fundo primary e texto branco, tr:nth-child(even) com fundo #f5f5f5
-- Imagens/Figuras: margin 24px 0, text-align center, borda 1px solid #ccc, border-radius 4px
+- Títulos de seção (H1): fundo #1a237e, texto branco, padding 12px 16px, border-radius 4px, font-size 16pt, font-weight bold, page-break-before: always, page-break-after: avoid
+- Subtítulos (H2): color #1a237e, border-left 3px solid #ff9800, padding-left 12px, font-size 13pt, page-break-after: avoid
+- Subtítulos (H3): color #1a237e, font-size 12pt, page-break-after: avoid
+- Texto corpo: font-size 11pt, line-height 1.6, text-align justify, color #333, orphans 3, widows 3
+- Listas: margin-left 20px, page-break-inside: avoid, li com ✓ em cor #4caf50 antes de cada item
+- Tabelas: width 100%, border-collapse, page-break-inside: avoid, th com fundo #1a237e e texto branco, tr:nth-child(even) com fundo #f5f5f5
+- Imagens/Figuras: margin 24px 0, text-align center, borda 1px solid #ccc, border-radius 4px, page-break-inside: avoid
 - Legendas: font-size 10pt, color #666, italic
 
 CAIXAS DE DESTAQUE:
-- Recomendações: background:#f0fdf4;border-left:4px solid #10b981;padding:16px;border-radius:8px;margin:16px 0
-- Riscos: background:#fef2f2;border-left:4px solid #ef4444;padding:16px;border-radius:8px;margin:16px 0
-- Próximos Passos: background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;border-radius:8px;margin:16px 0
-- Decisões Críticas: background:#ede9fe;border-left:4px solid #8b5cf6;padding:16px;border-radius:8px;margin:16px 0
+- Recomendações: background:#f0fdf4;border-left:4px solid #10b981;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
+- Riscos: background:#fef2f2;border-left:4px solid #ef4444;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
+- Próximos Passos: background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
+- Decisões Críticas: background:#ede9fe;border-left:4px solid #8b5cf6;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
 
 ÍCONES UNICODE: ⚙️ (técnico) | 💰 (comercial) | ⚠️ (risco) | 📈 (ganho) | 📅 (prazo) | 👥 (recursos) | 🔒 (segurança)
 
 IMAGENS - REGRA OBRIGATÓRIA:
 - Todo placeholder de imagem DEVE ser substituído por legenda técnica descritiva
-- Formato: <div style="border:2px dashed #94a3b8;border-radius:8px;padding:32px;text-align:center;margin:24px 0;background:#f8fafc"><p style="font-weight:600;color:#1a237e;font-size:13px">Figura X.X – [Descrição técnica detalhada]</p><p style="font-size:12px;color:#6b7280;margin-top:8px">[Tipo: render/diagrama/esquemático] | [Elementos principais] | [Objetivo]</p><button style="margin-top:12px;padding:8px 16px;background:#1a237e;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📎 Inserir Imagem</button></div>
+- Formato: <div style="border:2px dashed #94a3b8;border-radius:8px;padding:32px;text-align:center;margin:24px 0;background:#f8fafc;page-break-inside:avoid"><p style="font-weight:600;color:#1a237e;font-size:13px">Figura X.X – [Descrição técnica detalhada]</p><p style="font-size:12px;color:#6b7280;margin-top:8px">[Tipo: render/diagrama/esquemático] | [Elementos principais] | [Objetivo]</p><button style="margin-top:12px;padding:8px 16px;background:#1a237e;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📎 Inserir Imagem</button></div>
 - NUNCA deixe <<IMAGEM:...>> sem legenda
+
+=== LISTA DETALHADA DE CUSTOS (OBRIGATÓRIO) ===
+
+REGRA CRÍTICA DE ORÇAMENTAÇÃO: O documento DEVE incluir uma TABELA DETALHADA DE CUSTOS com TODOS os componentes especificados pelos agentes especialistas. Esta tabela é OBRIGATÓRIA em todas as versões (Básica, Normal, Completa).
+
+ESTRUTURA DA TABELA DE CUSTOS (gerar com page-break-inside: avoid):
+A tabela deve conter os seguintes grupos, cada um com itens detalhados:
+
+1. ENGENHARIA MECÂNICA (Projeto, layout, simulações FEA/CFD, desenhos técnicos)
+2. ENGENHARIA ELÉTRICA (Projeto elétrico, diagramas unifilar/multifilar, lista de I/O)
+3. COMPONENTES MECÂNICOS (Estrutura metálica, guias lineares, fusos, mancais, fixações, ferramentais, dispositivos)
+4. COMPONENTES ELÉTRICOS (Quadro elétrico, disjuntores, contatores, inversores de frequência, fontes, cabos, conectores)
+5. AUTOMAÇÃO E CONTROLE (CLP, IHM, sensores, atuadores, válvulas, cilindros pneumáticos, servomotores, drivers)
+6. ROBÓTICA (se aplicável: Robô industrial, controlador, teach pendant, ferramental end-of-arm)
+7. SEGURANÇA (Cortinas de luz, scanners laser, relés de segurança, botões de emergência, grades, portas com intertravamento)
+8. SOFTWARE E INTEGRAÇÃO (Programação CLP/HMI, integração SCADA/MES, comissionamento virtual)
+9. MONTAGEM MECÂNICA (montagem estrutural, alinhamento, nivelamento, ajustes)
+10. MONTAGEM ELÉTRICA (cabeação, conexões, testes de continuidade, megômetro)
+11. INSTALAÇÃO NO CLIENTE (transporte, içamento, posicionamento, conexões utilities)
+12. COMISSIONAMENTO (startup, parametrização, testes de segurança, validação, treinamento)
+13. SERVIÇOS CONTRATADOS (usinagem terceirizada, tratamentos superficiais, certificações NR-12)
+14. TRANSPORTES E LOGÍSTICA
+15. DESPESAS DE CAMPO (translados, hospedagem, alimentação)
+
+FORMATO DA TABELA:
+<table style="width:100%;border-collapse:collapse;margin:16px 0;page-break-inside:avoid;font-size:10pt">
+<thead>
+<tr><th style="background:#1a237e;color:white;padding:8px 12px;text-align:left;border:1px solid #1a237e">Item</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:left;border:1px solid #1a237e">Descrição</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:center;border:1px solid #1a237e">Qtd</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:right;border:1px solid #1a237e">Valor Unit. (R$)</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:right;border:1px solid #1a237e">Valor Total (R$)</th></tr>
+</thead>
+<tbody>
+<!-- Linhas de grupo (fundo cinza claro, negrito) seguidas de linhas de item -->
+</tbody>
+<tfoot>
+<tr style="font-weight:bold;background:#e3f2fd"><td colspan="4" style="padding:8px 12px;border:1px solid #ddd">SUBTOTAL DIRETO</td><td style="padding:8px 12px;text-align:right;border:1px solid #ddd">R$ XXX.XXX,XX</td></tr>
+<tr><td colspan="4" style="padding:8px 12px;border:1px solid #ddd">Overhead / Custos Indiretos (30-35%)</td><td style="padding:8px 12px;text-align:right;border:1px solid #ddd">R$ XXX.XXX,XX</td></tr>
+<tr><td colspan="4" style="padding:8px 12px;border:1px solid #ddd">Margem Técnico-Comercial (20-25%)</td><td style="padding:8px 12px;text-align:right;border:1px solid #ddd">R$ XXX.XXX,XX</td></tr>
+<tr style="font-weight:bold;background:#1a237e;color:white"><td colspan="4" style="padding:10px 12px;border:1px solid #1a237e;font-size:12pt">VALOR TOTAL DO INVESTIMENTO</td><td style="padding:10px 12px;text-align:right;border:1px solid #1a237e;font-size:12pt">R$ XXX.XXX,XX</td></tr>
+</tfoot>
+</table>
+
+REGRAS DE ESTIMATIVA DE VALORES:
+- Use benchmarks de mercado brasileiro para componentes industriais
+- Valores devem ser ESTIMATIVAS REALISTAS baseadas no porte do projeto
+- Marque como [ESTIMATIVA] quando baseado em benchmarks
+- Se dados de investimento foram fornecidos no formulário, use-os como referência para calibrar os valores
+- O valor total deve ser coerente com as faixas de investimento informadas
+- Para cada grupo, liste NO MÍNIMO 3 itens específicos com valores unitários e totais
+- NUNCA use "A CONFIRMAR" na tabela de custos principal (exceto na seção "Dados a Confirmar")
 
 DETALHAMENTO DE SERVIÇOS (incluir automaticamente conforme aplicável):
 1. Engenharia Mecânica (layout, projeto estrutural, ferramentais, simulações)
@@ -137,13 +196,14 @@ function buildVersionInstructions(version: string, docType: string): string {
 1. SUMÁRIO EXECUTIVO (escopo, especificações principais, benefícios, investimento total)
 2. ALTERNATIVAS DE SOLUÇÃO (Resumida – tabela com 1 opção recomendada)
 3. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA (com análise técnica profunda)
-4. ESCOPO TÉCNICO (Resumido)
+4. ESCOPO TÉCNICO (Resumido) + LISTA DETALHADA DE CUSTOS POR COMPONENTE
 5. PLANO DE EXECUÇÃO (Linhas-chave)
-6. FECHAMENTO COMERCIAL (condições, garantia, validade)
+6. FECHAMENTO COMERCIAL (condições, garantia, validade) com tabela de custos consolidada
 7. RECOMENDAÇÕES FINAIS
 
 ELEMENTOS VISUAIS OBRIGATÓRIOS:
 - Tabela comparativa simples (opção recomendada com custo, prazo, risco)
+- TABELA DETALHADA DE CUSTOS com todos os componentes (mínimo 20 itens)
 - Gráfico de barras HTML/CSS: "Ganho Mensal Estimado" vs "Investimento"
 - Caixa de destaque "PRÓXIMOS PASSOS" com 3 itens
 - 1 placeholder ilustrativo com legenda: Visão conceitual da solução`;
@@ -156,16 +216,17 @@ ELEMENTOS VISUAIS OBRIGATÓRIOS:
 3. ENTENDIMENTO DO PROJETO (contexto, premissas, diagnóstico técnico)
 4. ALTERNATIVAS DE SOLUÇÃO (Tabela executiva 3 opções: Conservadora, Intermediária, Otimizada)
 5. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA
-6. ESCOPO TÉCNICO (Detalhado)
+6. ESCOPO TÉCNICO (Detalhado) + LISTA DETALHADA DE CUSTOS POR COMPONENTE (mínimo 30 itens)
 7. PLANO DE EXECUÇÃO (Etapas com responsáveis, indicadores, marcos)
 8. RECURSOS NECESSÁRIOS (Resumido)
-9. IMPACTO OPERACIONAL E FINANCEIRO (ROI, payback, VPL)
+9. IMPACTO OPERACIONAL E FINANCEIRO (ROI, payback, VPL) com tabela de custos consolidada
 10. RISCOS E CONTROLES (com matriz 3×3 HTML/CSS verde/amarelo/vermelho)
 11. FECHAMENTO COMERCIAL (condições pagamento, garantia, documentação fornecida)
 12. RECOMENDAÇÕES FINAIS
 
 ELEMENTOS VISUAIS OBRIGATÓRIOS:
 - Tabela comparativa executiva (3 opções com custo, prazo, risco, descrição)
+- TABELA DETALHADA DE CUSTOS com todos os componentes por grupo (mínimo 30 itens)
 - Matriz de risco 3×3 (HTML/CSS)
 - Gráfico de payback (barras HTML/CSS com linha break-even)
 - Diagrama de fluxo do processo (4-6 etapas, HTML/CSS)
@@ -181,17 +242,19 @@ ELEMENTOS VISUAIS OBRIGATÓRIOS:
 5. ALTERNATIVAS DE SOLUÇÃO (Análise detalhada com tabela comparativa executiva 3 opções + sensibilidade + recomendação executiva)
 6. CRONOGRAMA DE IMPLEMENTAÇÃO (fases com datas, marcos, gráfico visual Gantt HTML)
 7. RETORNO SOBRE INVESTIMENTO (VPL, payback descontado, cenários conservador/otimista, análise de sensibilidade)
-8. ESCOPO TÉCNICO COMPLETO (BOM, especificações, arquitetura, normas)
+8. ESCOPO TÉCNICO COMPLETO (BOM detalhada, especificações, arquitetura, normas) + LISTA DETALHADA DE CUSTOS POR COMPONENTE (mínimo 50 itens em 15 grupos)
 9. RECURSOS NECESSÁRIOS (pessoal, materiais, equipamentos, terceiros, infraestrutura)
 10. RISCOS E CONTROLES (Completo com matriz 3×3 + plano de resposta em 7 dimensões)
 11. CRITÉRIOS DE ACEITAÇÃO (métricas: OEE, Cpk, refugo, disponibilidade, payback)
 12. DADOS A CONFIRMAR (lista de validações necessárias em campo/fornecedores/cliente)
 13. VISÃO CONCEITUAL (figuras com legendas técnicas detalhadas, layout 2D)
-14. TERMOS E CONDIÇÕES COMERCIAIS (pagamento, garantia, suporte, documentação)
+14. TERMOS E CONDIÇÕES COMERCIAIS (pagamento, garantia, suporte, documentação) com resumo financeiro consolidado
 15. ENCERRAMENTO E ASSINATURAS
 
 ELEMENTOS VISUAIS OBRIGATÓRIOS:
 - Tabela comparativa executiva completa (3 opções + sensibilidade)
+- TABELA DETALHADA DE CUSTOS com TODOS os componentes especificados, organizados em 15 grupos (mínimo 50 itens)
+- Tabela de BOM (Bill of Materials) com código, descrição, fabricante, quantidade
 - Matriz de risco 3×3 com plano de resposta por risco
 - Gráfico de payback + sensibilidade (HTML/CSS barras e linhas)
 - Cronograma visual Gantt com fases, datas e marcos
@@ -241,7 +304,6 @@ serve(async (req) => {
     const clientState = d.client_state || "";
     const clientContact = d.client_contact_info || "";
 
-    // Build comprehensive data summary
     const dataLines = [
       `--- DADOS DA EMPRESA FORNECEDORA ---`,
       `Nome: ${companyName}`,
@@ -310,13 +372,13 @@ ${versionInstructions}
 
 CAPA FORMAL OBRIGATÓRIA (PRIMEIRA SEÇÃO DO HTML):
 Gere uma capa executiva profissional com o seguinte layout:
-<div style="text-align:center;padding:60px 40px;min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;border:2px solid #1a237e;border-radius:8px;margin-bottom:32px">
+<div style="text-align:center;padding:60px 40px;min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;border:2px solid #1a237e;border-radius:8px;margin-bottom:32px;page-break-after:always">
   <div style="width:120px;height:60px;background:#1a237e;color:white;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:700;font-size:14px;margin-bottom:32px">${companyName}</div>
   <div style="width:100px;height:1px;background:#1a237e;margin:16px 0"></div>
-  <h1 style="font-size:28px;font-weight:700;color:#1a237e;margin:16px 0">${docLabel}</h1>
+  <h1 style="font-size:28px;font-weight:700;color:#1a237e;margin:16px 0;background:none;padding:0">${docLabel}</h1>
   <div style="width:100px;height:1px;background:#1a237e;margin:16px 0"></div>
-  <h2 style="font-size:18px;color:#ff9800;margin:16px 0;font-weight:600">${d.project_title}</h2>
-  <p style="font-size:13px;color:#666;margin:8px 0">${d.custom_scope_description?.substring(0, 120) || ''}</p>
+  <h2 style="font-size:18px;color:#ff9800;margin:16px 0;font-weight:600;border:none;padding:0">${d.project_title}</h2>
+  <p style="font-size:13px;color:#666;margin:8px 0;text-align:center">${d.custom_scope_description?.substring(0, 120) || ''}</p>
   <div style="width:100px;height:1px;background:#ccc;margin:24px 0"></div>
   <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;max-width:400px;width:100%">
     <div><p style="font-size:11px;color:#666"><strong style="color:#1a237e">CLIENTE:</strong><br>${clientLegalName || clientName}</p>${clientCnpj ? `<p style="font-size:10px;color:#666"><strong style="color:#1a237e">CNPJ:</strong> ${clientCnpj}</p>` : ''}</div>
@@ -331,7 +393,7 @@ Gere uma capa executiva profissional com o seguinte layout:
 </div>
 
 ÍNDICE AUTOMÁTICO:
-Após a capa, inclua um índice dinâmico numerado com as seções que serão geradas, com links internos usando anchorlinks.
+Após a capa, inclua um índice dinâmico numerado com as seções que serão geradas, com links internos usando anchorlinks. O índice deve estar em sua própria página (page-break-after: always no container do índice).
 
 LINGUAGEM HUMANIZADA (OBRIGATÓRIO):
 - Escreva como um engenheiro sênior redigindo para um cliente executivo
@@ -341,14 +403,21 @@ LINGUAGEM HUMANIZADA (OBRIGATÓRIO):
 - Se dados não foram informados, declare como premissa assumida (não "A CONFIRMAR", exceto na seção "Dados a Confirmar")
 - Cada seção deve ter substância técnica real, não apenas estrutura
 
+REGRA CRÍTICA DE PAGINAÇÃO:
+- Cada seção principal (com título H1 em fundo azul) DEVE iniciar em nova página: style="page-break-before:always"
+- TODAS as tabelas devem ter: style="page-break-inside:avoid"
+- TODOS os containers de destaque devem ter: style="page-break-inside:avoid"
+- Títulos H2 e H3 devem ter: style="page-break-after:avoid"
+- Blocos de assinatura NUNCA devem ser divididos entre páginas
+
 ${version === "Completa" ? `ENCERRAMENTO FORMAL (ÚLTIMA SEÇÃO - OBRIGATÓRIO):
 Inclua no final do documento:
 
-<div style="margin-top:48px;border-top:3px solid #1a237e;padding-top:32px">
-  <h2 style="text-align:center;font-size:16px;color:#1a237e;margin-bottom:8px">TERMO DE ACEITE E ASSINATURAS AUTORIZADAS</h2>
+<div style="margin-top:48px;border-top:3px solid #1a237e;padding-top:32px;page-break-inside:avoid">
+  <h2 style="text-align:center;font-size:16px;color:#1a237e;margin-bottom:8px;border:none;padding:0">TERMO DE ACEITE E ASSINATURAS AUTORIZADAS</h2>
   <p style="text-align:center;font-size:11px;color:#666;margin-bottom:32px">${docLabel} – ${d.project_title} | Versão: ${versionCode} | Data: ${dateShort}</p>
   
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;page-break-inside:avoid">
     <div style="border:1px solid #e5e7eb;padding:24px;border-radius:8px">
       <h3 style="font-size:12px;color:#1a237e;border-bottom:1px solid #e5e7eb;padding-bottom:8px;margin-bottom:12px">PELA EMPRESA FORNECEDORA:</h3>
       <p style="font-size:10px;line-height:1.8"><strong>${companyLegalName || companyName}</strong></p>
