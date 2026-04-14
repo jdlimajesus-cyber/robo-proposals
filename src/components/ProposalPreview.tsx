@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History } from "lucide-react";
+import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History, Loader2 } from "lucide-react";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { VersionHistoryPanel } from "@/components/VersionHistoryPanel";
 import { useProposalVersions } from "@/hooks/use-proposal-versions";
+import { generatePDF } from "@/lib/pdf-generator";
+import { toast } from "sonner";
 
 interface ProposalPreviewProps {
   html: string;
@@ -146,6 +148,8 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [currentHtml, setCurrentHtml] = useState(html);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [pdfProgress, setPdfProgress] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const { versions, activeVersionId, saveVersion, loadVersion, deleteVersion, getLatestContent } =
@@ -325,16 +329,21 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
     printWindow.print();
   };
 
-  const handleExportPdf = () => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-    const content = contentRef.current?.innerHTML || currentHtml;
-    printWindow.document.write(buildPrintHtml(content));
-    printWindow.document.close();
-    // Small delay to ensure styles load, then trigger print (Save as PDF)
-    setTimeout(() => {
-      printWindow.print();
-    }, 500);
+  const handleExportPdf = async () => {
+    setIsGeneratingPdf(true);
+    setPdfProgress("Iniciando...");
+    try {
+      const content = contentRef.current?.innerHTML || currentHtml;
+      const fileName = `proposta-${proposalId}.pdf`;
+      await generatePDF(content, fileName, setPdfProgress);
+      toast.success("PDF gerado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      toast.error("Erro ao gerar PDF. Tente novamente.");
+    } finally {
+      setIsGeneratingPdf(false);
+      setPdfProgress("");
+    }
   };
 
   return (
@@ -369,8 +378,9 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
             <Button variant="outline" onClick={handlePrint} className="gap-2">
               <Printer className="h-4 w-4" /> Imprimir
             </Button>
-            <Button onClick={handleExportPdf} className="gap-2 brand-gradient text-primary-foreground">
-              <Download className="h-4 w-4" /> Exportar PDF
+            <Button onClick={handleExportPdf} disabled={isGeneratingPdf} className="gap-2 brand-gradient text-primary-foreground">
+              {isGeneratingPdf ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+              {isGeneratingPdf ? pdfProgress || "Gerando..." : "Exportar PDF"}
             </Button>
           </div>
         </div>
