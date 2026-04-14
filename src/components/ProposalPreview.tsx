@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History } from "lucide-react";
+import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History, Loader2 } from "lucide-react";
 import { useRef, useState, useCallback, useEffect } from "react";
 import { VersionHistoryPanel } from "@/components/VersionHistoryPanel";
 import { useProposalVersions } from "@/hooks/use-proposal-versions";
+import { generatePDF } from "@/lib/pdf-generator";
+import { toast } from "sonner";
 
 interface ProposalPreviewProps {
   html: string;
