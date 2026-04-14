@@ -329,16 +329,21 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
     printWindow.print();
   };
 
-  const handleExportPdf = () => {
-    const printWindow = window.open("", "_blank");
-    if (!printWindow) return;
-    const content = contentRef.current?.innerHTML || currentHtml;
-    printWindow.document.write(buildPrintHtml(content));
-    printWindow.document.close();
-    // Small delay to ensure styles load, then trigger print (Save as PDF)
-    setTimeout(() => {
-      printWindow.print();
-    }, 500);
+  const handleExportPdf = async () => {
+    setIsGeneratingPdf(true);
+    setPdfProgress("Iniciando...");
+    try {
+      const content = contentRef.current?.innerHTML || currentHtml;
+      const fileName = `proposta-${proposalId}.pdf`;
+      await generatePDF(content, fileName, setPdfProgress);
+      toast.success("PDF gerado com sucesso!");
+    } catch (error) {
+      console.error("Erro ao gerar PDF:", error);
+      toast.error("Erro ao gerar PDF. Tente novamente.");
+    } finally {
+      setIsGeneratingPdf(false);
+      setPdfProgress("");
+    }
   };
 
   return (
