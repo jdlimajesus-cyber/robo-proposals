@@ -378,8 +378,9 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
             <Button variant="outline" onClick={handlePrint} className="gap-2">
               <Printer className="h-4 w-4" /> Imprimir
             </Button>
-            <Button onClick={handleExportPdf} className="gap-2 brand-gradient text-primary-foreground">
-              <Download className="h-4 w-4" /> Exportar PDF
+            <Button onClick={handleExportPdf} disabled={isGeneratingPdf} className="gap-2 brand-gradient text-primary-foreground">
+              {isGeneratingPdf ? <Loader2 className="h-4 w-4 animate-spin" /> : <Download className="h-4 w-4" />}
+              {isGeneratingPdf ? pdfProgress || "Gerando..." : "Exportar PDF"}
             </Button>
           </div>
         </div>
