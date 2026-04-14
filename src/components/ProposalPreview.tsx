@@ -148,6 +148,8 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
   const [currentHtml, setCurrentHtml] = useState(html);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const [pdfProgress, setPdfProgress] = useState("");
   const debounceRef = useRef<ReturnType<typeof setTimeout>>();
 
   const { versions, activeVersionId, saveVersion, loadVersion, deleteVersion, getLatestContent } =
