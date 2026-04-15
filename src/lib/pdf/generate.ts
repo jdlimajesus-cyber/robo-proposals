@@ -32,7 +32,7 @@ export async function generateProposalPdf(
   onProgress?.("Gerando documento PDF...");
 
   // 2. Create the PDF document
-  const doc = React.createElement(ProposalDocument, { data: proposalData });
+  const doc = React.createElement(ProposalDocument, { data: proposalData }) as any;
   const blob = await pdf(doc).toBlob();
 
   onProgress?.("Preparando download...");
