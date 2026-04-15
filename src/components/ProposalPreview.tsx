@@ -335,7 +335,7 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
     try {
       const content = contentRef.current?.innerHTML || currentHtml;
       const fileName = `proposta-${proposalId}.pdf`;
-      await generatePDF(content, fileName, setPdfProgress);
+      await generateProposalPdf(content, fileName, undefined, setPdfProgress);
       toast.success("PDF gerado com sucesso!");
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
