@@ -3,7 +3,7 @@ import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History, Loa
 import { useRef, useState, useCallback, useEffect } from "react";
 import { VersionHistoryPanel } from "@/components/VersionHistoryPanel";
 import { useProposalVersions } from "@/hooks/use-proposal-versions";
-import { generatePDF } from "@/lib/pdf-generator";
+import { generateProposalPdf } from "@/lib/pdf/generate";
 import { toast } from "sonner";
 
 interface ProposalPreviewProps {
