@@ -3,7 +3,7 @@ import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History, Loa
 import { useRef, useState, useCallback, useEffect } from "react";
 import { VersionHistoryPanel } from "@/components/VersionHistoryPanel";
 import { useProposalVersions } from "@/hooks/use-proposal-versions";
-import { generatePDF } from "@/lib/pdf-generator";
+import { generateProposalPdf } from "@/lib/pdf/generate";
 import { toast } from "sonner";
 
 interface ProposalPreviewProps {
@@ -335,7 +335,7 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
     try {
       const content = contentRef.current?.innerHTML || currentHtml;
       const fileName = `proposta-${proposalId}.pdf`;
-      await generatePDF(content, fileName, setPdfProgress);
+      await generateProposalPdf(content, fileName, undefined, setPdfProgress);
       toast.success("PDF gerado com sucesso!");
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
