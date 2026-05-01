@@ -24,9 +24,12 @@ export function useDocuments() {
   }, []);
 
   const saveDocument = async (doc: Partial<GeneratedDocument>) => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return null;
+
     const { data, error } = await supabase
       .from("generated_documents")
-      .insert(doc as any)
+      .insert({ ...doc, user_id: user.id } as any)
       .select()
       .single();
 
