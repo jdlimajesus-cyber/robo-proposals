@@ -27,6 +27,13 @@ export function CompanyDialog({ type, onSave }: CompanyDialogProps) {
   const [authorizedTitle, setAuthorizedTitle] = useState("");
   const [authorizedCrea, setAuthorizedCrea] = useState("");
   const [authorizedCpf, setAuthorizedCpf] = useState("");
+  // Branding
+  const [primaryColor, setPrimaryColor] = useState("#1a3a5c");
+  const [secondaryColor, setSecondaryColor] = useState("#e67e22");
+  const [accentColor, setAccentColor] = useState("#0f1419");
+  const [docPrefix, setDocPrefix] = useState("DOC");
+  const [tagline, setTagline] = useState("");
+  const [logoUrl, setLogoUrl] = useState("");
 
   const handleSave = async () => {
     if (!name.trim()) return;
@@ -45,6 +52,14 @@ export function CompanyDialog({ type, onSave }: CompanyDialogProps) {
       authorized_person_title: authorizedTitle || undefined,
       authorized_person_crea: authorizedCrea || undefined,
       authorized_person_cpf: authorizedCpf || undefined,
+      ...(type === "internal" && {
+        brand_primary_color: primaryColor,
+        brand_secondary_color: secondaryColor,
+        brand_accent_color: accentColor,
+        doc_id_prefix: (docPrefix || "DOC").toUpperCase().slice(0, 6),
+        brand_tagline: tagline || undefined,
+        logo_url: logoUrl || undefined,
+      }),
     });
     setOpen(false);
     resetFields();
@@ -54,6 +69,8 @@ export function CompanyDialog({ type, onSave }: CompanyDialogProps) {
     setName(""); setLegalName(""); setCnpj(""); setAddress(""); setCity(""); setState("");
     setContactInfo(""); setPaymentTerms(""); setWarrantyPeriod("");
     setAuthorizedName(""); setAuthorizedTitle(""); setAuthorizedCrea(""); setAuthorizedCpf("");
+    setPrimaryColor("#1a3a5c"); setSecondaryColor("#e67e22"); setAccentColor("#0f1419");
+    setDocPrefix("DOC"); setTagline(""); setLogoUrl("");
   };
 
   const isInternal = type === "internal";
@@ -109,6 +126,47 @@ export function CompanyDialog({ type, onSave }: CompanyDialogProps) {
             {isInternal && (
               <>
                 <div className="border-t pt-4 mt-4">
+                  <h3 className="text-sm font-semibold text-foreground mb-3">🎨 Identidade Visual (PDF)</h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label>Prefixo Código (DOC-ID)</Label>
+                      <Input value={docPrefix} onChange={(e) => setDocPrefix(e.target.value.toUpperCase())} placeholder="AXZ, EG, ENG..." maxLength={6} />
+                    </div>
+                    <div className="space-y-2">
+                      <Label>Tagline</Label>
+                      <Input value={tagline} onChange={(e) => setTagline(e.target.value)} placeholder="Proposal Engine" />
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3 mt-3">
+                    <div className="space-y-2">
+                      <Label className="text-xs">Cor Primária</Label>
+                      <div className="flex gap-1">
+                        <Input type="color" value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="w-12 h-9 p-1" />
+                        <Input value={primaryColor} onChange={(e) => setPrimaryColor(e.target.value)} className="flex-1 text-xs" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs">Cor Destaque</Label>
+                      <div className="flex gap-1">
+                        <Input type="color" value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} className="w-12 h-9 p-1" />
+                        <Input value={secondaryColor} onChange={(e) => setSecondaryColor(e.target.value)} className="flex-1 text-xs" />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-xs">Cor Texto</Label>
+                      <div className="flex gap-1">
+                        <Input type="color" value={accentColor} onChange={(e) => setAccentColor(e.target.value)} className="w-12 h-9 p-1" />
+                        <Input value={accentColor} onChange={(e) => setAccentColor(e.target.value)} className="flex-1 text-xs" />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="space-y-2 mt-3">
+                    <Label>URL do Logo (opcional)</Label>
+                    <Input value={logoUrl} onChange={(e) => setLogoUrl(e.target.value)} placeholder="https://..." />
+                  </div>
+                </div>
+
+                <div className="border-t pt-4 mt-4">
                   <h3 className="text-sm font-semibold text-foreground mb-3">👤 Responsável Técnico (Assinatura)</h3>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
@@ -131,18 +189,17 @@ export function CompanyDialog({ type, onSave }: CompanyDialogProps) {
                     </div>
                   </div>
                 </div>
-              </>
-            )}
 
-            {!isInternal && (
-              <>
-                <div className="space-y-2">
-                  <Label>Condições de Pagamento Padrão</Label>
-                  <Input value={paymentTerms} onChange={(e) => setPaymentTerms(e.target.value)} placeholder="Ex: 50/30/20 - Assinatura/80%/Entrega" />
-                </div>
-                <div className="space-y-2">
-                  <Label>Garantia Padrão</Label>
-                  <Input value={warrantyPeriod} onChange={(e) => setWarrantyPeriod(e.target.value)} placeholder="Ex: 24 meses" />
+                <div className="border-t pt-4 mt-4 space-y-4">
+                  <h3 className="text-sm font-semibold text-foreground mb-3">💼 Condições Comerciais Padrão</h3>
+                  <div className="space-y-2">
+                    <Label>Condições de Pagamento Padrão</Label>
+                    <Input value={paymentTerms} onChange={(e) => setPaymentTerms(e.target.value)} placeholder="Ex: 50/30/20 - Assinatura/80%/Entrega" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Garantia Padrão</Label>
+                    <Input value={warrantyPeriod} onChange={(e) => setWarrantyPeriod(e.target.value)} placeholder="Ex: 24 meses" />
+                  </div>
                 </div>
               </>
             )}
