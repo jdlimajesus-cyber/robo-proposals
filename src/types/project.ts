@@ -1,5 +1,6 @@
 export interface Company {
   id: string;
+  user_id?: string;
   company_type: "internal" | "customer";
   name: string;
   legal_name?: string;
@@ -16,6 +17,13 @@ export interface Company {
   authorized_person_crea?: string;
   authorized_person_cpf?: string;
   signature_image_url?: string;
+  // Branding (para empresas internas)
+  brand_primary_color?: string;
+  brand_secondary_color?: string;
+  brand_accent_color?: string;
+  doc_id_prefix?: string;
+  brand_font_family?: string;
+  brand_tagline?: string;
 }
 
 export interface ProjectData {
@@ -71,6 +79,11 @@ export interface ProjectData {
   company_signature_image_url?: string;
   company_payment_terms?: string;
   company_warranty_period?: string;
+  company_brand_primary_color?: string;
+  company_brand_secondary_color?: string;
+  company_brand_accent_color?: string;
+  company_doc_id_prefix?: string;
+  company_brand_tagline?: string;
   client_name?: string;
   client_legal_name?: string;
   client_cnpj?: string;
@@ -80,8 +93,83 @@ export interface ProjectData {
   client_contact_info?: string;
 }
 
+// Structured data emitted by the LLM for native PDF generation
+export interface StructuredProposalData {
+  meta: {
+    title: string;
+    subtitle?: string;
+    docId: string;
+    version: string;
+    date: string;
+    validity: string;
+    status: string;
+    clientName: string;
+    clientLegalName?: string;
+    clientCnpj?: string;
+    companyName: string;
+    companyLegalName?: string;
+    companyCnpj?: string;
+    companyTagline?: string;
+    confidential: boolean;
+  };
+  executive: {
+    summary: string;
+    note?: string;
+    headlineMetrics: { label: string; value: string }[];
+  };
+  specs: { label: string; value: string }[];
+  bom: {
+    categories: {
+      code: string;
+      name: string;
+      subtotal?: string;
+      items: {
+        code: string;
+        description: string;
+        discipline?: string;
+        quantity: string;
+        unit: string;
+        unitPrice: string;
+        total: string;
+        status?: string;
+      }[];
+    }[];
+    totals: { label: string; value: string; highlight?: boolean }[];
+  };
+  schedule: {
+    totalWeeks: number;
+    phases: {
+      name: string;
+      responsible: string;
+      startWeek: number;
+      endWeek: number;
+      milestones: string;
+    }[];
+  };
+  risks: {
+    level: "ALTO" | "MEDIO" | "BAIXO";
+    category: string;
+    description: string;
+    probability: "Baixa" | "Média" | "Alta";
+    impact: "Baixo" | "Médio" | "Alto";
+    mitigation: string;
+  }[];
+  roi: {
+    scenario: "Conservador" | "Base" | "Otimista";
+    capex: string;
+    annualBenefit: string;
+    paybackMonths: string;
+    assumption: string;
+  }[];
+  acceptance: {
+    contractor: { label: string; name?: string; title?: string; cnpj?: string };
+    contracted: { label: string; name?: string; title?: string; crea?: string; cnpj?: string };
+  };
+}
+
 export interface GeneratedDocument {
   id: string;
+  user_id?: string;
   company_id?: string;
   client_id?: string;
   project_title: string;
@@ -91,6 +179,8 @@ export interface GeneratedDocument {
   input_form_data: ProjectData;
   output_html?: string;
   output_file_name?: string;
+  doc_code?: string;
+  structured_data?: StructuredProposalData;
   status: "generated" | "editing" | "finalized";
   created_at: string;
   // joined

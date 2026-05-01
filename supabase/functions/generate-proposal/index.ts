@@ -6,264 +6,399 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const systemPrompt = `VOCÊ É UM ENGENHEIRO SÊNIOR MULTIDISCIPLINAR DE ENGENHARIA INDUSTRIAL, especialista em automação, células robotizadas, máquinas especiais, moldes, processos de manufatura e gestão técnico-econômica de sistemas industriais.
+const SYSTEM_PROMPT = `Você é um ENGENHEIRO SÊNIOR MULTIDISCIPLINAR de engenharia industrial (automação, robótica, máquinas especiais, processos), redigindo uma proposta técnica e comercial para um cliente executivo.
 
-IDENTIDADE E VOZ:
-- Você redige como um especialista humano experiente com mais de 20 anos de carreira
-- Tom profissional, confiante e personalizado
-- Use primeira pessoa plural: "nossa equipe", "propomos", "recomendamos", "identificamos"
-- NUNCA use "o sistema sugere", "o agente recomenda", "gerado por IA", "modelo", "agente"
-- O documento NUNCA deve revelar sua origem automatizada
-- O cliente deve perceber o documento como redigido por um engenheiro sênior experiente
+VOZ E TOM:
+- Primeira pessoa plural ("nossa equipe", "propomos", "recomendamos").
+- NUNCA mencione IA, agentes, modelos, "gerado automaticamente".
+- Linguagem técnica precisa, executiva, confiante. NUNCA use placeholders como "A CONFIRMAR" exceto na seção apropriada.
+- Diferencie FATO / HIPÓTESE / PREMISSA / ESTIMATIVA quando relevante.
 
-REGRA DE OURO: Nenhum placeholder não substituído, nenhuma menção a IA/agentes/modelos no documento final. A proposta é SEMPRE uma resposta humana à necessidade do cliente, assinada pela empresa, com voz consistente e autoridade técnica.
+PRIORIDADES INQUEBRANTÁVEIS (em ordem):
+1) Segurança (NR-12, NR-10, ISO 12100, ISO 13849-1, IEC 60204-1)
+2) Conformidade legal e elétrica
+3) Cibersegurança (ISA/IEC 62443) e LGPD
+4) Viabilidade técnica e compatibilidade
+5) Confiabilidade (MTBF/MTTR), performance, prazo, custo total
 
-PRINCÍPIOS OBRIGATÓRIOS (FONTE DE VERDADE - 30 AGENTES ESPECIALIZADOS):
+CÁLCULOS A APLICAR:
+- Tempo de ciclo = (3600/produção_pç_h) × 0.85 (eficiência)
+- Carga útil mínima = (peso_peça + 0.5 kg ferramental) × 1.1
+- OEE alvo ≥ 75%
+- Use benchmarks reais do mercado brasileiro (R$) para BOM
 
-1. PRECISÃO TÉCNICA ABSOLUTA:
-   - Terminologia precisa, unidades de medida, referências normativas
-   - Diferencie explicitamente: FATO (confirmado), HIPÓTESE (assumido), PREMISSA (condição), ESTIMATIVA (cálculo com margem)
-   - Nunca use termos vagos sem qualificação
-   - Explique a cadeia de raciocínio de forma reproduzível
+PROIBIÇÕES:
+- Inventar marcas/modelos sem base
+- Bypass de segurança
+- Confundir estimativa com valor fechado
+- Mencionar IA ou origem automatizada`;
 
-2. HIERARQUIA DE PRIORIDADES (INQUEBRANTÁVEL):
-   1) Segurança Operacional e Conformidade Legal (NR, ISO, ASME)
-   2) Segurança Elétrica (aterramento, proteção, qualidade de energia)
-   3) Segurança Cibernética (acesso, confidencialidade, integridade)
-   4) Conformidade de Dados (LGPD/GDPR)
-   5) Viabilidade Técnica
-   6) Compatibilidade com Existente
-   7) Confiabilidade e Mantenibilidade (MTBF, MTTR)
-   8) Capacidade e Performance
-   9) Prazo de Implantação
-   10) Custo Total (CAPEX, OPEX, TCO)
-   11) Flexibilidade Futura
-   12) Sofisticação Tecnológica
-
-3. VISÃO HOLÍSTICA OBRIGATÓRIA:
-   - CAPEX, OPEX, PRAZO, RISCO, RETORNO, COMPLEXIDADE
-   - Ciclo de vida: Concepção → Projeto → Fabricação → Instalação → Comissionamento → Operação → Manutenção → Modernização → Descomissionamento
-
-4. MULTIDISCIPLINARIDADE INTEGRADA:
-   - Processo, Automação, Qualidade, Manutenção, Segurança, Infraestrutura Elétrica/TI, Dados/IA, Negócio
-
-5. RISCOS EM 7 DIMENSÕES:
-   - Segurança Operacional, Elétrica, Cibernética, Conformidade de Dados, Qualidade, Prazo, Integração Técnica
-   - Para cada risco: Descrição, Probabilidade, Impacto, Plano de Mitigação
-
-6. MÚLTIPLAS ROTAS DE SOLUÇÃO (sempre 3):
-   - Conservadora: menor risco, maior prazo, tecnologia comprovada
-   - Intermediária: equilíbrio risco/prazo/custo/inovação
-   - Otimizada: maior risco técnico, menor prazo, tecnologia avançada
-
-7. MENOR COMPLEXIDADE NECESSÁRIA: Priorize a solução mais simples que atende TODOS os requisitos
-
-8. INCERTEZAS EXPLÍCITAS: Declare dados faltantes, grau de confiança, informações a validar
-
-9. CONFORMIDADE NORMATIVA: NR-10, NR-12, ISO 12100, ISO 13849-1, IEC 62061, IEC 60204-1, ISA/IEC 62443
-
-10. PROIBIÇÕES ABSOLUTAS:
-   - NUNCA inventar especificações ou dados sem base
-   - NUNCA omitir premissas críticas
-   - NUNCA ignorar segurança em qualquer dimensão
-   - NUNCA confundir estimativa com valor fechado
-   - NUNCA recomendar bypass de segurança
-
-PROCESSAMENTO INTERNO AUTOMÁTICO:
-1. CÁLCULO DE TEMPO DE CICLO: Tempo disponível = 3600/producao segundos, Tempo ciclo real = Tempo disponível x 0.85 (fator eficiência)
-2. VERIFICAÇÃO DE CARGA ÚTIL: Carga total = peso + 0.5kg (ferramental), Carga mínima = Carga total x 1.1
-3. DIMENSIONAMENTO DO ALCANCE: Alcance necessário = Distância x 1.2
-4. VERIFICAÇÃO DE SEGURANÇA: NR-12, ISO 12100, áreas de segurança, enclausuramento, intertravamentos
-5. VERIFICAÇÃO AMBIENTAL: IP adequado, materiais resistentes
-6. CÁLCULO DE OEE: Meta mínima 75%, MTBF > 8760 horas
-7. ANÁLISE DE MODOS DE FALHA
-
-HUMANIZAÇÃO (OBRIGATÓRIO):
-- Substitua dados genéricos por análises técnicas concretas com números reais
-- Ex: NÃO "melhorar a produtividade" → SIM "aumentar a taxa de produção de 70 para 140 peças/hora, reduzindo o tempo de ciclo de 55s para ≤40s"
-- Toda recomendação deve ter justificativa técnica fundamentada
-- Corrija automaticamente erros de formatação ou digitação
-
-=== REGRAS DE FORMATAÇÃO HTML E DIAGRAMAÇÃO A4 ===
-
-REGRA CRÍTICA: O HTML gerado DEVE ser otimizado para impressão/exportação em formato A4.
-- Gere HTML puro com CSS inline. NÃO use markdown (**, #, etc).
-- NÃO envolva em blocos de código markdown.
-
-CONTROLE DE PAGINAÇÃO (OBRIGATÓRIO):
-- Cada SEÇÃO PRINCIPAL (H1 com fundo azul) deve iniciar em nova página. Use: style="page-break-before: always;"
-- Tabelas: NUNCA quebrar no meio. Use style="page-break-inside: avoid;" em TODAS as tabelas.
-- Listas: Manter juntas. Use style="page-break-inside: avoid;" em <ul> e <ol>.
-- Imagens/Figuras: NUNCA dividir. Use style="page-break-inside: avoid;" em containers de imagens.
-- Títulos (H2, H3): NUNCA deixar sozinhos no final da página. Use style="page-break-after: avoid;"
-- Caixas de destaque: Manter inteiras. Use style="page-break-inside: avoid;"
-- Blocos de assinatura: NUNCA dividir entre páginas.
-
-ESTRUTURA DE ESTILOS DO DOCUMENTO:
-- Variáveis: --primary-color: #1a237e; --secondary-color: #ff9800; --accent-color: #4caf50; --text-color: #333333;
-- Títulos de seção (H1): fundo #1a237e, texto branco, padding 12px 16px, border-radius 4px, font-size 16pt, font-weight bold, page-break-before: always, page-break-after: avoid
-- Subtítulos (H2): color #1a237e, border-left 3px solid #ff9800, padding-left 12px, font-size 13pt, page-break-after: avoid
-- Subtítulos (H3): color #1a237e, font-size 12pt, page-break-after: avoid
-- Texto corpo: font-size 11pt, line-height 1.6, text-align justify, color #333, orphans 3, widows 3
-- Listas: margin-left 20px, page-break-inside: avoid, li com ✓ em cor #4caf50 antes de cada item
-- Tabelas: width 100%, border-collapse, page-break-inside: avoid, th com fundo #1a237e e texto branco, tr:nth-child(even) com fundo #f5f5f5
-- Imagens/Figuras: margin 24px 0, text-align center, borda 1px solid #ccc, border-radius 4px, page-break-inside: avoid
-- Legendas: font-size 10pt, color #666, italic
-
-CAIXAS DE DESTAQUE:
-- Recomendações: background:#f0fdf4;border-left:4px solid #10b981;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
-- Riscos: background:#fef2f2;border-left:4px solid #ef4444;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
-- Próximos Passos: background:#fffbeb;border-left:4px solid #f59e0b;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
-- Decisões Críticas: background:#ede9fe;border-left:4px solid #8b5cf6;padding:16px;border-radius:8px;margin:16px 0;page-break-inside:avoid
-
-ÍCONES UNICODE: ⚙️ (técnico) | 💰 (comercial) | ⚠️ (risco) | 📈 (ganho) | 📅 (prazo) | 👥 (recursos) | 🔒 (segurança)
-
-IMAGENS - REGRA OBRIGATÓRIA:
-- Todo placeholder de imagem DEVE ser substituído por legenda técnica descritiva
-- Formato: <div style="border:2px dashed #94a3b8;border-radius:8px;padding:32px;text-align:center;margin:24px 0;background:#f8fafc;page-break-inside:avoid"><p style="font-weight:600;color:#1a237e;font-size:13px">Figura X.X – [Descrição técnica detalhada]</p><p style="font-size:12px;color:#6b7280;margin-top:8px">[Tipo: render/diagrama/esquemático] | [Elementos principais] | [Objetivo]</p><button style="margin-top:12px;padding:8px 16px;background:#1a237e;color:white;border:none;border-radius:4px;cursor:pointer;font-size:12px">📎 Inserir Imagem</button></div>
-- NUNCA deixe <<IMAGEM:...>> sem legenda
-
-=== LISTA DETALHADA DE CUSTOS (OBRIGATÓRIO) ===
-
-REGRA CRÍTICA DE ORÇAMENTAÇÃO: O documento DEVE incluir uma TABELA DETALHADA DE CUSTOS com TODOS os componentes especificados pelos agentes especialistas. Esta tabela é OBRIGATÓRIA em todas as versões (Básica, Normal, Completa).
-
-ESTRUTURA DA TABELA DE CUSTOS (gerar com page-break-inside: avoid):
-A tabela deve conter os seguintes grupos, cada um com itens detalhados:
-
-1. ENGENHARIA MECÂNICA (Projeto, layout, simulações FEA/CFD, desenhos técnicos)
-2. ENGENHARIA ELÉTRICA (Projeto elétrico, diagramas unifilar/multifilar, lista de I/O)
-3. COMPONENTES MECÂNICOS (Estrutura metálica, guias lineares, fusos, mancais, fixações, ferramentais, dispositivos)
-4. COMPONENTES ELÉTRICOS (Quadro elétrico, disjuntores, contatores, inversores de frequência, fontes, cabos, conectores)
-5. AUTOMAÇÃO E CONTROLE (CLP, IHM, sensores, atuadores, válvulas, cilindros pneumáticos, servomotores, drivers)
-6. ROBÓTICA (se aplicável: Robô industrial, controlador, teach pendant, ferramental end-of-arm)
-7. SEGURANÇA (Cortinas de luz, scanners laser, relés de segurança, botões de emergência, grades, portas com intertravamento)
-8. SOFTWARE E INTEGRAÇÃO (Programação CLP/HMI, integração SCADA/MES, comissionamento virtual)
-9. MONTAGEM MECÂNICA (montagem estrutural, alinhamento, nivelamento, ajustes)
-10. MONTAGEM ELÉTRICA (cabeação, conexões, testes de continuidade, megômetro)
-11. INSTALAÇÃO NO CLIENTE (transporte, içamento, posicionamento, conexões utilities)
-12. COMISSIONAMENTO (startup, parametrização, testes de segurança, validação, treinamento)
-13. SERVIÇOS CONTRATADOS (usinagem terceirizada, tratamentos superficiais, certificações NR-12)
-14. TRANSPORTES E LOGÍSTICA
-15. DESPESAS DE CAMPO (translados, hospedagem, alimentação)
-
-FORMATO DA TABELA:
-<table style="width:100%;border-collapse:collapse;margin:16px 0;page-break-inside:avoid;font-size:10pt">
-<thead>
-<tr><th style="background:#1a237e;color:white;padding:8px 12px;text-align:left;border:1px solid #1a237e">Item</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:left;border:1px solid #1a237e">Descrição</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:center;border:1px solid #1a237e">Qtd</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:right;border:1px solid #1a237e">Valor Unit. (R$)</th><th style="background:#1a237e;color:white;padding:8px 12px;text-align:right;border:1px solid #1a237e">Valor Total (R$)</th></tr>
-</thead>
-<tbody>
-<!-- Linhas de grupo (fundo cinza claro, negrito) seguidas de linhas de item -->
-</tbody>
-<tfoot>
-<tr style="font-weight:bold;background:#e3f2fd"><td colspan="4" style="padding:8px 12px;border:1px solid #ddd">SUBTOTAL DIRETO</td><td style="padding:8px 12px;text-align:right;border:1px solid #ddd">R$ XXX.XXX,XX</td></tr>
-<tr><td colspan="4" style="padding:8px 12px;border:1px solid #ddd">Overhead / Custos Indiretos (30-35%)</td><td style="padding:8px 12px;text-align:right;border:1px solid #ddd">R$ XXX.XXX,XX</td></tr>
-<tr><td colspan="4" style="padding:8px 12px;border:1px solid #ddd">Margem Técnico-Comercial (20-25%)</td><td style="padding:8px 12px;text-align:right;border:1px solid #ddd">R$ XXX.XXX,XX</td></tr>
-<tr style="font-weight:bold;background:#1a237e;color:white"><td colspan="4" style="padding:10px 12px;border:1px solid #1a237e;font-size:12pt">VALOR TOTAL DO INVESTIMENTO</td><td style="padding:10px 12px;text-align:right;border:1px solid #1a237e;font-size:12pt">R$ XXX.XXX,XX</td></tr>
-</tfoot>
-</table>
-
-REGRAS DE ESTIMATIVA DE VALORES:
-- Use benchmarks de mercado brasileiro para componentes industriais
-- Valores devem ser ESTIMATIVAS REALISTAS baseadas no porte do projeto
-- Marque como [ESTIMATIVA] quando baseado em benchmarks
-- Se dados de investimento foram fornecidos no formulário, use-os como referência para calibrar os valores
-- O valor total deve ser coerente com as faixas de investimento informadas
-- Para cada grupo, liste NO MÍNIMO 3 itens específicos com valores unitários e totais
-- NUNCA use "A CONFIRMAR" na tabela de custos principal (exceto na seção "Dados a Confirmar")
-
-DETALHAMENTO DE SERVIÇOS (incluir automaticamente conforme aplicável):
-1. Engenharia Mecânica (layout, projeto estrutural, ferramentais, simulações)
-2. Engenharia Elétrica (quadros, diagramas, proteções, sensores)
-3. Montagens Mecânicas (estrutural, robôs, sistemas auxiliares)
-4. Montagens Elétricas (cabeação, conexões, testes)
-5. Engenharia de Software (programação robô, HMI, CLP, integração)
-6. Montagens Internas (testes pré-instalação, debugging)
-7. Instalação no Cliente (transporte, posicionamento, conexão)
-8. Comissionamento (segurança, calibração, treinamento, startup)
-9. Serviços Contratados (peças, terceiros, certificações)
-10. Transportes e Logística
-11. Aluguel de Equipamentos
-12. Despesas de Campo (translados, hospedagem, alimentação)
-
-Data atual: ${new Date().toLocaleDateString('pt-BR')}`;
-
-function buildVersionInstructions(version: string, docType: string): string {
-  const isScope = docType === "escopo";
-  const docLabel = isScope ? "ESCOPO TÉCNICO" : "PROPOSTA TÉCNICA E COMERCIAL";
-
+function buildVersionGuidance(version: string): string {
   if (version === "Basica") {
-    return `VERSÃO BÁSICA – Gere APENAS as 7 seções abaixo para ${docLabel}:
-1. SUMÁRIO EXECUTIVO (escopo, especificações principais, benefícios, investimento total)
-2. ALTERNATIVAS DE SOLUÇÃO (Resumida – tabela com 1 opção recomendada)
-3. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA (com análise técnica profunda)
-4. ESCOPO TÉCNICO (Resumido) + LISTA DETALHADA DE CUSTOS POR COMPONENTE
-5. PLANO DE EXECUÇÃO (Linhas-chave)
-6. FECHAMENTO COMERCIAL (condições, garantia, validade) com tabela de custos consolidada
-7. RECOMENDAÇÕES FINAIS
-
-ELEMENTOS VISUAIS OBRIGATÓRIOS:
-- Tabela comparativa simples (opção recomendada com custo, prazo, risco)
-- TABELA DETALHADA DE CUSTOS com todos os componentes (mínimo 20 itens)
-- Gráfico de barras HTML/CSS: "Ganho Mensal Estimado" vs "Investimento"
-- Caixa de destaque "PRÓXIMOS PASSOS" com 3 itens
-- 1 placeholder ilustrativo com legenda: Visão conceitual da solução`;
+    return `VERSÃO BÁSICA: foco em sumário, BOM resumida (10-15 itens), 1 cenário de ROI, riscos principais (3-5), cronograma simplificado (4-6 semanas).`;
   }
-
   if (version === "Normal") {
-    return `VERSÃO NORMAL – Gere APENAS as 12 seções abaixo para ${docLabel}:
-1. SUMÁRIO EXECUTIVO (escopo, specs, benefícios, investimento, cronograma executivo)
-2. SOBRE O CLIENTE (apresentação, localização, infraestrutura, capacidades)
-3. ENTENDIMENTO DO PROJETO (contexto, premissas, diagnóstico técnico)
-4. ALTERNATIVAS DE SOLUÇÃO (Tabela executiva 3 opções: Conservadora, Intermediária, Otimizada)
-5. SOLUÇÃO RECOMENDADA E JUSTIFICATIVA
-6. ESCOPO TÉCNICO (Detalhado) + LISTA DETALHADA DE CUSTOS POR COMPONENTE (mínimo 30 itens)
-7. PLANO DE EXECUÇÃO (Etapas com responsáveis, indicadores, marcos)
-8. RECURSOS NECESSÁRIOS (Resumido)
-9. IMPACTO OPERACIONAL E FINANCEIRO (ROI, payback, VPL) com tabela de custos consolidada
-10. RISCOS E CONTROLES (com matriz 3×3 HTML/CSS verde/amarelo/vermelho)
-11. FECHAMENTO COMERCIAL (condições pagamento, garantia, documentação fornecida)
-12. RECOMENDAÇÕES FINAIS
+    return `VERSÃO NORMAL: BOM detalhada (20-30 itens em 4-6 categorias), 3 cenários ROI, matriz de risco com 5-7 itens, cronograma com 5-8 fases.`;
+  }
+  return `VERSÃO COMPLETA: BOM completa (30+ itens em até 6 categorias visíveis ao cliente — Engenharia, Matérias-primas, Componentes, Automação, Segurança, Serviços), 3 cenários ROI com sensibilidade, matriz de risco completa (7+ itens em 7 dimensões), cronograma 6-12 semanas com responsáveis e marcos.`;
+}
 
-ELEMENTOS VISUAIS OBRIGATÓRIOS:
-- Tabela comparativa executiva (3 opções com custo, prazo, risco, descrição)
-- TABELA DETALHADA DE CUSTOS com todos os componentes por grupo (mínimo 30 itens)
-- Matriz de risco 3×3 (HTML/CSS)
-- Gráfico de payback (barras HTML/CSS com linha break-even)
-- Diagrama de fluxo do processo (4-6 etapas, HTML/CSS)
-- Cronograma visual com fases e datas
-- 2 placeholders ilustrativos: Fluxo do Processo, Conceito da Solução`;
+const JSON_SCHEMA = {
+  type: "object",
+  required: ["meta", "executive", "specs", "bom", "schedule", "risks", "roi", "acceptance"],
+  properties: {
+    meta: {
+      type: "object",
+      required: ["title", "docId", "version", "date", "validity", "status", "clientName", "companyName", "confidential"],
+      properties: {
+        title: { type: "string" },
+        subtitle: { type: "string" },
+        docId: { type: "string", description: "Ex: AXZ-XXXXXXXX" },
+        version: { type: "string", description: "Ex: 1.0" },
+        date: { type: "string", description: "DD/MM/AAAA" },
+        validity: { type: "string", description: "Ex: 15 DIAS CORRIDOS" },
+        status: { type: "string", description: "Ex: PROPOSTA TÉCNICA" },
+        clientName: { type: "string" },
+        clientLegalName: { type: "string" },
+        clientCnpj: { type: "string" },
+        companyName: { type: "string" },
+        companyLegalName: { type: "string" },
+        companyCnpj: { type: "string" },
+        companyTagline: { type: "string" },
+        confidential: { type: "boolean" },
+      },
+    },
+    executive: {
+      type: "object",
+      required: ["summary", "headlineMetrics"],
+      properties: {
+        summary: { type: "string", description: "2-4 parágrafos executivos descrevendo escopo, abordagem e valor entregue" },
+        note: { type: "string", description: "Nota crítica sobre investimento, premissas ou alertas comerciais" },
+        headlineMetrics: {
+          type: "array",
+          items: {
+            type: "object",
+            required: ["label", "value"],
+            properties: { label: { type: "string" }, value: { type: "string" } },
+          },
+          description: "4 métricas-chave para destaque visual",
+        },
+      },
+    },
+    specs: {
+      type: "array",
+      description: "Especificações técnicas principais (pares label/valor) — 8 a 12 itens",
+      items: {
+        type: "object",
+        required: ["label", "value"],
+        properties: { label: { type: "string" }, value: { type: "string" } },
+      },
+    },
+    bom: {
+      type: "object",
+      required: ["categories", "totals"],
+      properties: {
+        categories: {
+          type: "array",
+          items: {
+            type: "object",
+            required: ["code", "name", "items"],
+            properties: {
+              code: { type: "string", description: "Ex: C2, C3" },
+              name: { type: "string", description: "Ex: MATÉRIA-PRIMA E MATERIAIS" },
+              subtotal: { type: "string", description: "Ex: R$ 1.594,00" },
+              items: {
+                type: "array",
+                items: {
+                  type: "object",
+                  required: ["code", "description", "quantity", "unit", "unitPrice", "total"],
+                  properties: {
+                    code: { type: "string" },
+                    description: { type: "string" },
+                    discipline: { type: "string", description: "Mecânica, Elétrica, Controle, Segurança, Serviços" },
+                    quantity: { type: "string" },
+                    unit: { type: "string", description: "un, m, kg, lote, etc" },
+                    unitPrice: { type: "string", description: "Formato R$ 0,00" },
+                    total: { type: "string" },
+                    status: { type: "string", description: "OK, OPC., A CONFIRMAR" },
+                  },
+                },
+              },
+            },
+          },
+        },
+        totals: {
+          type: "array",
+          items: {
+            type: "object",
+            required: ["label", "value"],
+            properties: {
+              label: { type: "string" },
+              value: { type: "string" },
+              highlight: { type: "boolean" },
+            },
+          },
+        },
+      },
+    },
+    schedule: {
+      type: "object",
+      required: ["totalWeeks", "phases"],
+      properties: {
+        totalWeeks: { type: "integer" },
+        phases: {
+          type: "array",
+          items: {
+            type: "object",
+            required: ["name", "responsible", "startWeek", "endWeek", "milestones"],
+            properties: {
+              name: { type: "string" },
+              responsible: { type: "string" },
+              startWeek: { type: "integer" },
+              endWeek: { type: "integer" },
+              milestones: { type: "string" },
+            },
+          },
+        },
+      },
+    },
+    risks: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["level", "category", "description", "probability", "impact", "mitigation"],
+        properties: {
+          level: { type: "string", enum: ["ALTO", "MEDIO", "BAIXO"] },
+          category: { type: "string", description: "Humano, Regulatório, Técnico, Operacional, Prazo, Cibernético, Financeiro" },
+          description: { type: "string" },
+          probability: { type: "string", enum: ["Baixa", "Média", "Alta"] },
+          impact: { type: "string", enum: ["Baixo", "Médio", "Alto"] },
+          mitigation: { type: "string" },
+        },
+      },
+    },
+    roi: {
+      type: "array",
+      items: {
+        type: "object",
+        required: ["scenario", "capex", "annualBenefit", "paybackMonths", "assumption"],
+        properties: {
+          scenario: { type: "string", enum: ["Conservador", "Base", "Otimista"] },
+          capex: { type: "string" },
+          annualBenefit: { type: "string" },
+          paybackMonths: { type: "string" },
+          assumption: { type: "string" },
+        },
+      },
+    },
+    acceptance: {
+      type: "object",
+      required: ["contractor", "contracted"],
+      properties: {
+        contractor: {
+          type: "object",
+          properties: {
+            label: { type: "string" },
+            name: { type: "string" },
+            title: { type: "string" },
+            cnpj: { type: "string" },
+          },
+        },
+        contracted: {
+          type: "object",
+          properties: {
+            label: { type: "string" },
+            name: { type: "string" },
+            title: { type: "string" },
+            crea: { type: "string" },
+            cnpj: { type: "string" },
+          },
+        },
+      },
+    },
+  },
+};
+
+function buildHtmlFromStructured(d: any, brandPrimary: string, brandSecondary: string): string {
+  const m = d.meta || {};
+  const exec = d.executive || {};
+  const specs: any[] = d.specs || [];
+  const bom = d.bom || { categories: [], totals: [] };
+  const schedule = d.schedule || { totalWeeks: 6, phases: [] };
+  const risks: any[] = d.risks || [];
+  const roi: any[] = d.roi || [];
+  const acc = d.acceptance || {};
+
+  const esc = (s: any) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]!));
+
+  const specsRows = [];
+  for (let i = 0; i < specs.length; i += 2) {
+    const a = specs[i], b = specs[i + 1];
+    specsRows.push(
+      `<tr><td style="padding:6px 10px;border:1px solid #e5e7eb;font-weight:600;color:#666;font-size:10px">${esc(a?.label)}</td><td style="padding:6px 10px;border:1px solid #e5e7eb;font-size:10px">${esc(a?.value)}</td>` +
+      (b ? `<td style="padding:6px 10px;border:1px solid #e5e7eb;font-weight:600;color:#666;font-size:10px">${esc(b.label)}</td><td style="padding:6px 10px;border:1px solid #e5e7eb;font-size:10px">${esc(b.value)}</td>` : `<td colspan="2" style="border:1px solid #e5e7eb"></td>`) +
+      `</tr>`
+    );
   }
 
-  return `VERSÃO COMPLETA – Gere TODAS as 15 seções para ${docLabel}:
-1. SUMÁRIO EXECUTIVO (escopo, specs, benefícios, investimento total, cronograma executivo)
-2. SOBRE O CLIENTE (apresentação, localização, infraestrutura, histórico de projetos)
-3. ENTENDIMENTO DO PROJETO (contexto, premissas, diagnóstico técnico inicial)
-4. ANÁLISE TÉCNICA E SOLUÇÃO RECOMENDADA (especificações dimensionais, sistema de refrigeração/controle, com imagens técnicas)
-5. ALTERNATIVAS DE SOLUÇÃO (Análise detalhada com tabela comparativa executiva 3 opções + sensibilidade + recomendação executiva)
-6. CRONOGRAMA DE IMPLEMENTAÇÃO (fases com datas, marcos, gráfico visual Gantt HTML)
-7. RETORNO SOBRE INVESTIMENTO (VPL, payback descontado, cenários conservador/otimista, análise de sensibilidade)
-8. ESCOPO TÉCNICO COMPLETO (BOM detalhada, especificações, arquitetura, normas) + LISTA DETALHADA DE CUSTOS POR COMPONENTE (mínimo 50 itens em 15 grupos)
-9. RECURSOS NECESSÁRIOS (pessoal, materiais, equipamentos, terceiros, infraestrutura)
-10. RISCOS E CONTROLES (Completo com matriz 3×3 + plano de resposta em 7 dimensões)
-11. CRITÉRIOS DE ACEITAÇÃO (métricas: OEE, Cpk, refugo, disponibilidade, payback)
-12. DADOS A CONFIRMAR (lista de validações necessárias em campo/fornecedores/cliente)
-13. VISÃO CONCEITUAL (figuras com legendas técnicas detalhadas, layout 2D)
-14. TERMOS E CONDIÇÕES COMERCIAIS (pagamento, garantia, suporte, documentação) com resumo financeiro consolidado
-15. ENCERRAMENTO E ASSINATURAS
+  const bomRows = bom.categories.map((cat: any) => {
+    const header = `<tr style="background:#eef2f6"><td colspan="7" style="padding:6px 10px;font-weight:700;color:${brandPrimary};font-size:10px;border:1px solid #ddd">${esc(cat.code)} — ${esc(cat.name)}${cat.subtotal ? ` · SUBTOTAL: ${esc(cat.subtotal)}` : ""}</td></tr>`;
+    const items = (cat.items || []).map((it: any) =>
+      `<tr><td style="padding:5px 8px;border:1px solid #eee;font-family:monospace;font-size:9px">${esc(it.code)}</td><td style="padding:5px 8px;border:1px solid #eee;font-size:10px">${esc(it.description)}</td><td style="padding:5px 8px;border:1px solid #eee;font-size:9px">${esc(it.discipline || "-")}</td><td style="padding:5px 8px;border:1px solid #eee;text-align:center;font-size:10px">${esc(it.quantity)}</td><td style="padding:5px 8px;border:1px solid #eee;text-align:center;font-size:10px">${esc(it.unit)}</td><td style="padding:5px 8px;border:1px solid #eee;text-align:right;font-size:10px">${esc(it.unitPrice)}</td><td style="padding:5px 8px;border:1px solid #eee;text-align:right;font-weight:600;font-size:10px">${esc(it.total)}</td></tr>`
+    ).join("");
+    return header + items;
+  }).join("");
 
-ELEMENTOS VISUAIS OBRIGATÓRIOS:
-- Tabela comparativa executiva completa (3 opções + sensibilidade)
-- TABELA DETALHADA DE CUSTOS com TODOS os componentes especificados, organizados em 15 grupos (mínimo 50 itens)
-- Tabela de BOM (Bill of Materials) com código, descrição, fabricante, quantidade
-- Matriz de risco 3×3 com plano de resposta por risco
-- Gráfico de payback + sensibilidade (HTML/CSS barras e linhas)
-- Cronograma visual Gantt com fases, datas e marcos
-- Diagrama de fluxo detalhado com tempos
-- Layout conceitual 2D esquemático com legenda
-- Tabela de critérios de aceitação (métricas mensuráveis)
-- Caixa "DADOS A CONFIRMAR" (lista explícita)
-- Gráficos de indicadores e ganhos acumulados
-- 5 placeholders ilustrativos: Fluxo do Processo, Layout da Célula, Conceito da Solução, Detalhe Ferramental, Diagrama Elétrico`;
+  const totalsRows = bom.totals.map((t: any) =>
+    `<tr style="${t.highlight ? `background:${brandPrimary};color:white;font-weight:700` : "background:#f9fafb"}"><td colspan="6" style="padding:7px 10px;border:1px solid #ddd">${esc(t.label)}</td><td style="padding:7px 10px;border:1px solid #ddd;text-align:right">${esc(t.value)}</td></tr>`
+  ).join("");
+
+  const weekHeaders = Array.from({ length: schedule.totalWeeks }, (_, i) =>
+    `<th style="padding:4px 6px;background:${brandPrimary};color:white;font-size:9px;border:1px solid ${brandPrimary};text-align:center">S${i + 1}</th>`
+  ).join("");
+
+  const phaseRows = schedule.phases.map((p: any, idx: number) => {
+    const cells = Array.from({ length: schedule.totalWeeks }, (_, i) => {
+      const wk = i + 1;
+      const active = wk >= p.startWeek && wk <= p.endWeek;
+      return `<td style="padding:4px 6px;border:1px solid #eee;background:${active ? brandSecondary : "transparent"};text-align:center;font-size:9px;color:white">${active ? "■" : ""}</td>`;
+    }).join("");
+    return `<tr><td style="padding:5px 8px;border:1px solid #eee;font-size:10px"><strong>${esc(p.name)}</strong><br><span style="font-size:9px;color:#666">${esc(p.responsible)}</span></td>${cells}<td style="padding:5px 8px;border:1px solid #eee;font-size:9px">${esc(p.milestones)}</td></tr>`;
+  }).join("");
+
+  const riskColor = (lvl: string) => lvl === "ALTO" ? "#fee2e2" : lvl === "MEDIO" ? "#fef9e7" : "#eafaf1";
+  const riskBadge = (lvl: string) => lvl === "ALTO" ? "#dc2626" : lvl === "MEDIO" ? "#d97706" : "#16a34a";
+  const riskRows = risks.map((r: any) =>
+    `<tr style="background:${riskColor(r.level)}"><td style="padding:6px 8px;border:1px solid #eee;font-size:9px"><span style="background:${riskBadge(r.level)};color:white;padding:2px 6px;border-radius:3px;font-weight:700">${esc(r.level)}</span></td><td style="padding:6px 8px;border:1px solid #eee;font-size:10px">${esc(r.category)}</td><td style="padding:6px 8px;border:1px solid #eee;font-size:10px">${esc(r.description)}</td><td style="padding:6px 8px;border:1px solid #eee;font-size:10px;text-align:center">${esc(r.probability)}</td><td style="padding:6px 8px;border:1px solid #eee;font-size:10px;text-align:center">${esc(r.impact)}</td><td style="padding:6px 8px;border:1px solid #eee;font-size:10px">${esc(r.mitigation)}</td></tr>`
+  ).join("");
+
+  const roiRows = roi.map((r: any) =>
+    `<tr><td style="padding:6px 10px;border:1px solid #eee;font-weight:600;font-size:10px">${esc(r.scenario)}${r.scenario === "Base" ? ' <span style="background:'+brandSecondary+';color:white;padding:1px 6px;border-radius:3px;font-size:9px;margin-left:6px">RECOMENDADO</span>' : ""}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.capex)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.annualBenefit)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.paybackMonths)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.assumption)}</td></tr>`
+  ).join("");
+
+  const headlineCards = (exec.headlineMetrics || []).map((h: any) =>
+    `<div style="flex:1;padding:14px;background:#f8fafc;border-left:4px solid ${brandSecondary};border-radius:4px"><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px">${esc(h.label)}</div><div style="font-size:16px;font-weight:700;color:${brandPrimary};margin-top:4px">${esc(h.value)}</div></div>`
+  ).join("");
+
+  return `<div style="font-family:'IBM Plex Sans',Arial,sans-serif;color:#0f1419;line-height:1.5">
+
+<!-- PÁGINA 1: CAPA + ESPECIFICAÇÕES + RESUMO -->
+<div style="page-break-after:always;border:2px solid ${brandPrimary};padding:32px;margin-bottom:24px">
+  <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #e5e7eb;padding-bottom:12px;margin-bottom:20px">
+    <div>
+      <div style="font-size:18px;font-weight:700;color:${brandPrimary}">${esc(m.companyName)}</div>
+      ${m.companyTagline ? `<div style="font-size:10px;color:#666;font-family:monospace">${esc(m.companyTagline)}</div>` : ""}
+    </div>
+    <div style="text-align:right;font-size:9px;color:#666;font-family:monospace">
+      <div>DOC: ${esc(m.docId)} | REV: ${esc(m.version)} | DATA: ${esc(m.date)}</div>
+      <div>STATUS: ${esc(m.status)} | VALIDADE: ${esc(m.validity)}</div>
+    </div>
+  </div>
+
+  <div style="margin:24px 0">
+    <div style="font-size:10px;color:#666;font-family:monospace">// DOC-ID: ${esc(m.docId)} · PROJETO</div>
+    <h1 style="font-size:32px;color:${brandPrimary};margin:8px 0;font-weight:700">${esc(m.title)}</h1>
+    ${m.subtitle ? `<p style="font-size:14px;color:#666;margin:0">${esc(m.subtitle)}</p>` : ""}
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;margin:20px 0;page-break-inside:avoid">
+    <tbody>${specsRows.join("")}</tbody>
+  </table>
+
+  <div style="margin-top:24px;padding:16px;background:#f8fafc;border-left:4px solid ${brandPrimary}">
+    <div style="font-size:10px;color:#666;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:4px">Cliente / Contratante</div>
+    <div style="font-size:18px;font-weight:700;color:${brandPrimary}">${esc(m.clientName)}</div>
+    ${m.clientLegalName ? `<div style="font-size:11px;color:#666">${esc(m.clientLegalName)}${m.clientCnpj ? ` · CNPJ ${esc(m.clientCnpj)}` : ""}</div>` : ""}
+  </div>
+
+  ${m.confidential ? `<div style="margin-top:16px;text-align:center;font-size:9px;color:#dc2626;font-weight:700;letter-spacing:1px">CONFIDENCIAL · USO RESTRITO</div>` : ""}
+</div>
+
+<!-- PÁGINA 2: RESUMO EXECUTIVO + BOM -->
+<div style="page-break-after:always">
+  <div style="background:${brandPrimary};color:white;padding:10px 16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
+    <div><span style="color:${brandSecondary};font-family:monospace;font-size:10px">// 01</span> <strong style="font-size:14px;letter-spacing:0.5px">RESUMO EXECUTIVO + BOM</strong></div>
+    <div style="font-family:monospace;font-size:9px">${esc(m.docId)} · REV.${esc(m.version)} · ${esc(m.date)}</div>
+  </div>
+
+  <div style="font-size:11px;line-height:1.6;text-align:justify;margin-bottom:16px">${esc(exec.summary).replace(/\n/g, "<br>")}</div>
+
+  ${exec.note ? `<div style="display:flex;gap:12px;padding:14px;background:#fef9e7;border-left:4px solid #d97706;border-radius:4px;margin-bottom:16px;page-break-inside:avoid"><div style="font-size:18px">⚠</div><div><div style="font-weight:700;color:#92400e;margin-bottom:4px;font-size:11px">Nota sobre Investimento</div><div style="font-size:10px;line-height:1.5">${esc(exec.note)}</div></div></div>` : ""}
+
+  <div style="display:flex;gap:10px;margin:16px 0;page-break-inside:avoid">${headlineCards}</div>
+
+  <div style="background:${brandPrimary};color:white;padding:6px 12px;margin:20px 0 8px;display:inline-block">
+    <span style="color:${brandSecondary};font-family:monospace;font-size:9px">// 05</span> <strong style="font-size:11px">LISTA DE MATERIAIS — BOM DETALHADA</strong>
+  </div>
+
+  <table style="width:100%;border-collapse:collapse;page-break-inside:auto">
+    <thead style="display:table-header-group">
+      <tr style="background:${brandPrimary};color:white">
+        <th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px;text-align:left">Código</th>
+        <th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px;text-align:left">Item / Descrição</th>
+        <th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px">Discip.</th>
+        <th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px">Qtd</th>
+        <th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px">Un.</th>
+        <th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px;text-align:right">Unit. R$</th>
+        <th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px;text-align:right">Total R$</th>
+      </tr>
+    </thead>
+    <tbody>${bomRows}${totalsRows}</tbody>
+  </table>
+</div>
+
+<!-- PÁGINA 3: CRONOGRAMA + RISCOS + ROI + ACEITE -->
+<div>
+  <div style="background:${brandPrimary};color:white;padding:10px 16px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center">
+    <div><span style="color:${brandSecondary};font-family:monospace;font-size:10px">// 06–10</span> <strong style="font-size:14px;letter-spacing:0.5px">CRONOGRAMA · RISCOS · ROI · ACEITE</strong></div>
+    <div style="font-family:monospace;font-size:9px">${esc(m.docId)} · REV.${esc(m.version)} · ${esc(m.date)}</div>
+  </div>
+
+  <h3 style="color:${brandPrimary};margin:8px 0;font-size:13px"><span style="color:${brandSecondary};font-family:monospace">// 06</span> CRONOGRAMA — ${schedule.totalWeeks} SEMANAS</h3>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px;page-break-inside:avoid;font-size:10px">
+    <thead><tr><th style="padding:6px 8px;background:${brandPrimary};color:white;border:1px solid ${brandPrimary};text-align:left;font-size:9px">Fase</th>${weekHeaders}<th style="padding:6px 8px;background:${brandPrimary};color:white;border:1px solid ${brandPrimary};font-size:9px">Marcos</th></tr></thead>
+    <tbody>${phaseRows}</tbody>
+  </table>
+
+  <h3 style="color:${brandPrimary};margin:16px 0 8px;font-size:13px;page-break-after:avoid"><span style="color:${brandSecondary};font-family:monospace">// 08</span> MATRIZ DE RISCOS</h3>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px;page-break-inside:avoid">
+    <thead><tr style="background:${brandPrimary};color:white"><th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px">Nível</th><th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px">Categoria</th><th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px;text-align:left">Descrição</th><th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px">Prob.</th><th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px">Impacto</th><th style="padding:6px 8px;border:1px solid ${brandPrimary};font-size:9px;text-align:left">Mitigação</th></tr></thead>
+    <tbody>${riskRows}</tbody>
+  </table>
+
+  <h3 style="color:${brandPrimary};margin:16px 0 8px;font-size:13px;page-break-after:avoid"><span style="color:${brandSecondary};font-family:monospace">// 07</span> ANÁLISE DE ROI — CENÁRIOS</h3>
+  <table style="width:100%;border-collapse:collapse;margin-bottom:20px;page-break-inside:avoid">
+    <thead><tr style="background:${brandPrimary};color:white"><th style="padding:6px 10px;border:1px solid ${brandPrimary};text-align:left;font-size:9px">Cenário</th><th style="padding:6px 10px;border:1px solid ${brandPrimary};text-align:left;font-size:9px">CAPEX</th><th style="padding:6px 10px;border:1px solid ${brandPrimary};text-align:left;font-size:9px">Benefício Anual</th><th style="padding:6px 10px;border:1px solid ${brandPrimary};text-align:left;font-size:9px">Payback (meses)</th><th style="padding:6px 10px;border:1px solid ${brandPrimary};text-align:left;font-size:9px">Premissa</th></tr></thead>
+    <tbody>${roiRows}</tbody>
+  </table>
+
+  <h3 style="color:${brandPrimary};margin:24px 0 8px;font-size:13px;page-break-after:avoid"><span style="color:${brandSecondary};font-family:monospace">// 10</span> ACEITE E ASSINATURAS</h3>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;page-break-inside:avoid">
+    <div style="border:1px solid #e5e7eb;padding:18px;border-radius:4px">
+      <div style="font-size:10px;font-weight:700;color:${brandPrimary};text-transform:uppercase;margin-bottom:12px">Contratante — ${esc(acc.contractor?.label || m.clientName)}</div>
+      <p style="font-size:10px;margin:6px 0">Nome: ${esc(acc.contractor?.name || "_________________________________")}</p>
+      <p style="font-size:10px;margin:6px 0">Cargo: ${esc(acc.contractor?.title || "_________________________________")}</p>
+      <p style="font-size:10px;margin:6px 0">CPF / CNPJ: ${esc(acc.contractor?.cnpj || "____________________________")}</p>
+      <div style="margin-top:30px;border-bottom:1px solid #333;height:40px"></div>
+      <p style="font-size:9px;color:#666;margin-top:6px">Assinatura · Data: ___/___/______</p>
+    </div>
+    <div style="border:1px solid #e5e7eb;padding:18px;border-radius:4px">
+      <div style="font-size:10px;font-weight:700;color:${brandPrimary};text-transform:uppercase;margin-bottom:12px">Contratada — ${esc(acc.contracted?.label || m.companyName)}</div>
+      <p style="font-size:10px;margin:6px 0">Nome: ${esc(acc.contracted?.name || "_________________________________")}</p>
+      <p style="font-size:10px;margin:6px 0">Cargo: ${esc(acc.contracted?.title || "_________________________________")}</p>
+      <p style="font-size:10px;margin:6px 0">CREA / CPF: ${esc(acc.contracted?.crea || acc.contracted?.cnpj || "____________________________")}</p>
+      <div style="margin-top:30px;border-bottom:1px solid #333;height:40px"></div>
+      <p style="font-size:9px;color:#666;margin-top:6px">Assinatura · Data: ___/___/______</p>
+    </div>
+  </div>
+
+  <div style="margin-top:24px;padding-top:12px;border-top:1px solid #e5e7eb;display:flex;justify-content:space-between;font-size:9px;color:#666">
+    <span style="font-weight:700;color:${brandPrimary}">${esc(m.companyName)}</span>
+    <span>DOC: ${esc(m.docId)} · REV.${esc(m.version)} · CONFIDENCIAL</span>
+  </div>
+</div>
+
+</div>`;
 }
 
 serve(async (req) => {
@@ -280,182 +415,66 @@ serve(async (req) => {
     const version = d.proposal_version || "Completa";
     const docType = d.initial_objective === "Gerar Escopo Técnico" ? "escopo" : "proposta";
     const docLabel = docType === "escopo" ? "ESCOPO TÉCNICO" : "PROPOSTA TÉCNICA E COMERCIAL";
-    const versionInstructions = buildVersionInstructions(version, docType);
 
-    const companyName = d.company_name || "Nossa Empresa";
-    const companyLegalName = d.company_legal_name || companyName;
-    const companyCnpj = d.company_cnpj || "";
-    const companyAddress = d.company_address || "";
-    const companyCity = d.company_city || "";
-    const companyState = d.company_state || "";
-    const companyContact = d.company_contact_info || "";
-    const authorizedName = d.company_authorized_person_name || "";
-    const authorizedTitle = d.company_authorized_person_title || "";
-    const authorizedCrea = d.company_authorized_person_crea || "";
-    const authorizedCpf = d.company_authorized_person_cpf || "";
-    const paymentTerms = d.company_payment_terms || "50% assinatura / 30% a 80% execução / 20% entrega";
-    const warrantyPeriod = d.company_warranty_period || "24 meses";
+    const docPrefix = (d.company_doc_id_prefix || "DOC").toUpperCase();
+    const seqNum = Math.random().toString(16).slice(2, 10).toUpperCase();
+    const docId = `${docPrefix}-${seqNum}`;
+    const dateBR = new Date().toLocaleDateString("pt-BR");
 
-    const clientName = d.client_name || "Cliente";
-    const clientLegalName = d.client_legal_name || clientName;
-    const clientCnpj = d.client_cnpj || "";
-    const clientAddress = d.client_address || "";
-    const clientCity = d.client_city || "";
-    const clientState = d.client_state || "";
-    const clientContact = d.client_contact_info || "";
+    const userPrompt = `Gere o documento ${docLabel} no formato JSON estruturado conforme o schema fornecido.
 
-    const dataLines = [
-      `--- DADOS DA EMPRESA FORNECEDORA ---`,
-      `Nome: ${companyName}`,
-      `Razão Social: ${companyLegalName}`,
-      companyCnpj ? `CNPJ: ${companyCnpj}` : null,
-      companyAddress ? `Endereço: ${companyAddress}` : null,
-      companyCity ? `Cidade: ${companyCity}` : null,
-      companyState ? `Estado: ${companyState}` : null,
-      companyContact ? `Contato: ${companyContact}` : null,
-      authorizedName ? `Responsável Técnico: ${authorizedName}` : null,
-      authorizedTitle ? `Cargo: ${authorizedTitle}` : null,
-      authorizedCrea ? `CREA: ${authorizedCrea}` : null,
-      authorizedCpf ? `CPF: ${authorizedCpf}` : null,
-      `Condições de Pagamento: ${paymentTerms}`,
-      `Garantia: ${warrantyPeriod}`,
-      ``,
-      `--- DADOS DO CLIENTE ---`,
-      `Nome: ${clientName}`,
-      `Razão Social: ${clientLegalName}`,
-      clientCnpj ? `CNPJ: ${clientCnpj}` : null,
-      clientAddress ? `Endereço: ${clientAddress}` : null,
-      clientCity ? `Cidade: ${clientCity}` : null,
-      clientState ? `Estado: ${clientState}` : null,
-      clientContact ? `Contato: ${clientContact}` : null,
-      ``,
-      `--- DADOS DO PROJETO ---`,
-      `Título: ${d.project_title}`,
-      `Tipo de Documento: ${docLabel}`,
-      `Versão: ${version}`,
-      `Descrição do Escopo: ${d.custom_scope_description}`,
-      `Tipo de Aplicação: ${d.application_type}`,
-      d.production_target ? `Produção Desejada: ${d.production_target} peças/hora` : null,
-      d.target_cycle_time ? `Tempo de Ciclo Alvo: ${d.target_cycle_time} segundos` : null,
-      d.piece_weight ? `Peso da Peça: ${d.piece_weight} kg` : null,
-      d.piece_dimensions ? `Dimensões da Peça: ${d.piece_dimensions}` : null,
-      d.product_name ? `Nome do Produto: ${d.product_name}` : null,
-      d.material ? `Material: ${d.material}` : null,
-      d.surface_finish ? `Acabamento Superficial: ${d.surface_finish}` : null,
-      d.automation_level ? `Nível de Automação: ${d.automation_level}` : null,
-      d.operational_environment ? `Ambiente Operacional: ${d.operational_environment}` : null,
-      d.work_shifts ? `Turnos de Operação: ${d.work_shifts}` : null,
-      d.continuous_operation ? `Operação Contínua: Sim` : null,
-      d.operating_temperature ? `Temperatura de Operação: ${d.operating_temperature}` : null,
-      d.installation_area_size ? `Área Disponível: ${d.installation_area_size}` : null,
-      d.available_power_supply ? `Alimentação Elétrica: ${d.available_power_supply}` : null,
-      d.available_compressed_air ? `Ar Comprimido: ${d.available_compressed_air}` : null,
-      d.investment_range_basic ? `Faixa Investimento Conservador: ${d.investment_range_basic}` : null,
-      d.investment_range_intermediate ? `Faixa Investimento Intermediário: ${d.investment_range_intermediate}` : null,
-      d.investment_range_optimized ? `Faixa Investimento Otimizado: ${d.investment_range_optimized}` : null,
-      d.observacoes ? `Observações: ${d.observacoes}` : null,
-    ].filter(Boolean).join("\n");
+CONTEXTO DO PROJETO:
+Empresa Fornecedora: ${d.company_name || "Nossa Empresa"} (${d.company_legal_name || ""}${d.company_cnpj ? ", CNPJ " + d.company_cnpj : ""})
+Tagline da empresa: ${d.company_brand_tagline || "Proposal Engine"}
+Responsável Técnico: ${d.company_authorized_person_name || ""}${d.company_authorized_person_title ? " — " + d.company_authorized_person_title : ""}${d.company_authorized_person_crea ? " · CREA " + d.company_authorized_person_crea : ""}
 
-    const year = new Date().getFullYear();
-    const dateFormatted = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
-    const dateShort = new Date().toLocaleDateString('pt-BR');
-    const seqNum = String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0');
-    const versionCode = `EG${seqNum}.${year}.00`;
-    const propNumber = `PROP-${year}-${String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')}`;
+Cliente: ${d.client_name || "Cliente"} (${d.client_legal_name || ""}${d.client_cnpj ? ", CNPJ " + d.client_cnpj : ""})
 
-    const userPrompt = `Gere o documento ${docLabel} em HTML puro para o seguinte projeto:
+Projeto: ${d.project_title}
+Aplicação: ${d.application_type}
+Descrição/Escopo: ${d.custom_scope_description}
+${d.production_target ? `Produção alvo: ${d.production_target} pç/h` : ""}
+${d.target_cycle_time ? `Tempo de ciclo alvo: ${d.target_cycle_time} s` : ""}
+${d.piece_weight ? `Peso da peça: ${d.piece_weight} kg` : ""}
+${d.piece_dimensions ? `Dimensões: ${d.piece_dimensions}` : ""}
+${d.material ? `Material: ${d.material}` : ""}
+${d.automation_level ? `Nível de automação: ${d.automation_level}` : ""}
+${d.work_shifts ? `Turnos: ${d.work_shifts}` : ""}
+${d.installation_area_size ? `Área disponível: ${d.installation_area_size}` : ""}
+${d.available_power_supply ? `Energia: ${d.available_power_supply}` : ""}
+${d.investment_range_basic ? `Faixa investimento conservador: ${d.investment_range_basic}` : ""}
+${d.investment_range_intermediate ? `Faixa investimento base: ${d.investment_range_intermediate}` : ""}
+${d.investment_range_optimized ? `Faixa investimento otimizado: ${d.investment_range_optimized}` : ""}
+${d.observacoes ? `Observações: ${d.observacoes}` : ""}
 
-${dataLines}
+INSTRUÇÕES OBRIGATÓRIAS:
+- DOC-ID a usar: "${docId}"
+- Versão: "1.0"
+- Data: "${dateBR}"
+- Validade: "15 DIAS CORRIDOS"
+- Status: "${docLabel}"
+- confidential: true
+- companyName: "${d.company_name || "Nossa Empresa"}"
+- companyTagline: "${d.company_brand_tagline || "Proposal Engine"}"
+- clientName: "${d.client_name || "Cliente"}"
+${d.client_legal_name ? `- clientLegalName: "${d.client_legal_name}"` : ""}
+${d.client_cnpj ? `- clientCnpj: "${d.client_cnpj}"` : ""}
+${d.company_legal_name ? `- companyLegalName: "${d.company_legal_name}"` : ""}
+${d.company_cnpj ? `- companyCnpj: "${d.company_cnpj}"` : ""}
 
-INSTRUÇÕES DE VERSÃO:
-${versionInstructions}
+Em "acceptance":
+- contractor.label = "${d.client_name || "Cliente"}"
+- contracted.label = "${d.company_name || "Nossa Empresa"}"
+${d.company_authorized_person_name ? `- contracted.name = "${d.company_authorized_person_name}"` : ""}
+${d.company_authorized_person_title ? `- contracted.title = "${d.company_authorized_person_title}"` : ""}
+${d.company_authorized_person_crea ? `- contracted.crea = "${d.company_authorized_person_crea}"` : ""}
+${d.company_cnpj ? `- contracted.cnpj = "${d.company_cnpj}"` : ""}
 
-CAPA FORMAL OBRIGATÓRIA (PRIMEIRA SEÇÃO DO HTML):
-Gere uma capa executiva profissional com o seguinte layout:
-<div style="text-align:center;padding:60px 40px;min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;border:2px solid #1a237e;border-radius:8px;margin-bottom:32px;page-break-after:always">
-  <div style="width:120px;height:60px;background:#1a237e;color:white;display:flex;align-items:center;justify-content:center;border-radius:8px;font-weight:700;font-size:14px;margin-bottom:32px">${companyName}</div>
-  <div style="width:100px;height:1px;background:#1a237e;margin:16px 0"></div>
-  <h1 style="font-size:28px;font-weight:700;color:#1a237e;margin:16px 0;background:none;padding:0">${docLabel}</h1>
-  <div style="width:100px;height:1px;background:#1a237e;margin:16px 0"></div>
-  <h2 style="font-size:18px;color:#ff9800;margin:16px 0;font-weight:600;border:none;padding:0">${d.project_title}</h2>
-  <p style="font-size:13px;color:#666;margin:8px 0;text-align:center">${d.custom_scope_description?.substring(0, 120) || ''}</p>
-  <div style="width:100px;height:1px;background:#ccc;margin:24px 0"></div>
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left;max-width:400px;width:100%">
-    <div><p style="font-size:11px;color:#666"><strong style="color:#1a237e">CLIENTE:</strong><br>${clientLegalName || clientName}</p>${clientCnpj ? `<p style="font-size:10px;color:#666"><strong style="color:#1a237e">CNPJ:</strong> ${clientCnpj}</p>` : ''}</div>
-    <div><p style="font-size:11px;color:#666"><strong style="color:#1a237e">DATA:</strong><br>${dateFormatted}</p><p style="font-size:10px;color:#666"><strong style="color:#1a237e">VERSÃO:</strong> ${versionCode}</p></div>
-  </div>
-  <div style="margin-top:32px;text-align:center">
-    <p style="font-size:10px;color:#666"><strong>Preparado por:</strong> ${companyLegalName || companyName}</p>
-    <p style="font-size:10px;color:#666">${companyCity && companyState ? `${companyCity} - ${companyState}` : ''}</p>
-    <p style="font-size:10px;color:#ff9800;font-weight:600;margin-top:8px">${dateFormatted}</p>
-    <p style="font-size:9px;color:#999;margin-top:4px">Validade: 30 dias a partir desta data | ${propNumber}</p>
-  </div>
-</div>
+${buildVersionGuidance(version)}
 
-ÍNDICE AUTOMÁTICO:
-Após a capa, inclua um índice dinâmico numerado com as seções que serão geradas, com links internos usando anchorlinks. O índice deve estar em sua própria página (page-break-after: always no container do índice).
+Use valores realistas em R$ (mercado brasileiro). Detalhe a BOM com itens, disciplina, quantidade, valores. Sem placeholders fictícios. Linguagem executiva.
 
-LINGUAGEM HUMANIZADA (OBRIGATÓRIO):
-- Escreva como um engenheiro sênior redigindo para um cliente executivo
-- Substitua dados genéricos por análises técnicas concretas com números
-- Toda recomendação deve ter justificativa técnica fundamentada com cálculos
-- Use os dados fornecidos para preencher tabelas, cálculos e estimativas com valores reais
-- Se dados não foram informados, declare como premissa assumida (não "A CONFIRMAR", exceto na seção "Dados a Confirmar")
-- Cada seção deve ter substância técnica real, não apenas estrutura
-
-REGRA CRÍTICA DE PAGINAÇÃO:
-- Cada seção principal (com título H1 em fundo azul) DEVE iniciar em nova página: style="page-break-before:always"
-- TODAS as tabelas devem ter: style="page-break-inside:avoid"
-- TODOS os containers de destaque devem ter: style="page-break-inside:avoid"
-- Títulos H2 e H3 devem ter: style="page-break-after:avoid"
-- Blocos de assinatura NUNCA devem ser divididos entre páginas
-
-${version === "Completa" ? `ENCERRAMENTO FORMAL (ÚLTIMA SEÇÃO - OBRIGATÓRIO):
-Inclua no final do documento:
-
-<div style="margin-top:48px;border-top:3px solid #1a237e;padding-top:32px;page-break-inside:avoid">
-  <h2 style="text-align:center;font-size:16px;color:#1a237e;margin-bottom:8px;border:none;padding:0">TERMO DE ACEITE E ASSINATURAS AUTORIZADAS</h2>
-  <p style="text-align:center;font-size:11px;color:#666;margin-bottom:32px">${docLabel} – ${d.project_title} | Versão: ${versionCode} | Data: ${dateShort}</p>
-  
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;margin-top:24px;page-break-inside:avoid">
-    <div style="border:1px solid #e5e7eb;padding:24px;border-radius:8px">
-      <h3 style="font-size:12px;color:#1a237e;border-bottom:1px solid #e5e7eb;padding-bottom:8px;margin-bottom:12px">PELA EMPRESA FORNECEDORA:</h3>
-      <p style="font-size:10px;line-height:1.8"><strong>${companyLegalName || companyName}</strong></p>
-      ${companyCnpj ? `<p style="font-size:10px">CNPJ: ${companyCnpj}</p>` : ''}
-      ${companyAddress ? `<p style="font-size:10px">Endereço: ${companyAddress}${companyCity ? `, ${companyCity}` : ''}${companyState ? ` - ${companyState}` : ''}</p>` : ''}
-      <div style="margin-top:20px;border-bottom:1px solid #333;width:200px;height:40px"></div>
-      ${authorizedName ? `<p style="font-size:10px;font-weight:600;margin-top:4px">${authorizedName}</p>` : '<p style="font-size:10px;margin-top:4px">Nome: _________________________</p>'}
-      ${authorizedTitle ? `<p style="font-size:9px;color:#666">${authorizedTitle}${authorizedCrea ? ` | CREA: ${authorizedCrea}` : ''}</p>` : ''}
-      ${authorizedCpf ? `<p style="font-size:9px;color:#666">CPF: ${authorizedCpf}</p>` : ''}
-      <p style="font-size:9px;color:#666;margin-top:8px">Data: ${dateShort}</p>
-    </div>
-    
-    <div style="border:1px solid #e5e7eb;padding:24px;border-radius:8px">
-      <h3 style="font-size:12px;color:#1a237e;border-bottom:1px solid #e5e7eb;padding-bottom:8px;margin-bottom:12px">PELA EMPRESA CLIENTE:</h3>
-      <p style="font-size:10px;line-height:1.8"><strong>${clientLegalName || clientName}</strong></p>
-      ${clientCnpj ? `<p style="font-size:10px">CNPJ: ${clientCnpj}</p>` : ''}
-      ${clientAddress ? `<p style="font-size:10px">Endereço: ${clientAddress}${clientCity ? `, ${clientCity}` : ''}${clientState ? ` - ${clientState}` : ''}</p>` : ''}
-      <div style="margin-top:20px;border-bottom:1px solid #333;width:200px;height:40px"></div>
-      <p style="font-size:10px;margin-top:4px">Nome: _________________________</p>
-      <p style="font-size:9px;color:#666">Cargo: _________________________</p>
-      <p style="font-size:9px;color:#666">CPF: _________________________</p>
-      <p style="font-size:9px;color:#666;margin-top:8px">Data: _____ / _____ / _____</p>
-    </div>
-  </div>
-  
-  <div style="margin-top:24px;padding:12px;background:#f5f5f5;border-radius:4px;font-size:9px;color:#666">
-    <p>• Esta proposta é válida por 30 dias a contar desta data</p>
-    <p>• O aceite acontece mediante assinatura deste termo</p>
-    <p>• Todas as cláusulas técnicas e comerciais são consideradas compreendidas e aceitas pelas partes</p>
-  </div>
-</div>` : ''}
-
-RODAPÉ PROFISSIONAL (ao final do documento):
-<div style="margin-top:48px;padding-top:16px;border-top:2px solid #e5e7eb;text-align:center;font-size:11px;color:#6b7280">
-  <p>Proposta Confidencial – © ${year} ${companyLegalName || companyName}. Todos os direitos reservados.</p>
-  <p>Validade: 30 dias corridos a partir de ${dateShort} | ${propNumber} | Versão: ${versionCode}</p>
-  <p style="margin-top:8px;font-style:italic">Preparado por ${companyName} – Equipe de Engenharia e Automação Industrial</p>
-</div>`;
+RETORNE EXCLUSIVAMENTE O JSON conforme a tool fornecida — nada mais.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -466,10 +485,20 @@ RODAPÉ PROFISSIONAL (ao final do documento):
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
         messages: [
-          { role: "system", content: systemPrompt },
+          { role: "system", content: SYSTEM_PROMPT },
           { role: "user", content: userPrompt },
         ],
-        stream: true,
+        tools: [
+          {
+            type: "function",
+            function: {
+              name: "emit_proposal",
+              description: "Emite a proposta estruturada no schema definido",
+              parameters: JSON_SCHEMA,
+            },
+          },
+        ],
+        tool_choice: { type: "function", function: { name: "emit_proposal" } },
       }),
     });
 
@@ -480,7 +509,7 @@ RODAPÉ PROFISSIONAL (ao final do documento):
         });
       }
       if (response.status === 402) {
-        return new Response(JSON.stringify({ error: "Créditos insuficientes. Adicione créditos em Settings > Workspace > Usage." }), {
+        return new Response(JSON.stringify({ error: "Créditos insuficientes." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
@@ -491,8 +520,36 @@ RODAPÉ PROFISSIONAL (ao final do documento):
       });
     }
 
-    return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+    const result = await response.json();
+    const toolCall = result?.choices?.[0]?.message?.tool_calls?.[0];
+    if (!toolCall) {
+      console.error("No tool_call in response:", JSON.stringify(result).slice(0, 1000));
+      throw new Error("Modelo não retornou dados estruturados");
+    }
+
+    let structured: any;
+    try {
+      structured = JSON.parse(toolCall.function.arguments);
+    } catch (e) {
+      console.error("Failed to parse tool args:", toolCall.function.arguments?.slice(0, 500));
+      throw new Error("JSON inválido retornado pelo modelo");
+    }
+
+    // Override meta fields with deterministic values
+    structured.meta = {
+      ...structured.meta,
+      docId,
+      version: structured.meta?.version || "1.0",
+      date: dateBR,
+      confidential: true,
+    };
+
+    const brandPrimary = d.company_brand_primary_color || "#1a3a5c";
+    const brandSecondary = d.company_brand_secondary_color || "#e67e22";
+    const html = buildHtmlFromStructured(structured, brandPrimary, brandSecondary);
+
+    return new Response(JSON.stringify({ structured, html, docId }), {
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (e) {
     console.error("generate-proposal error:", e);

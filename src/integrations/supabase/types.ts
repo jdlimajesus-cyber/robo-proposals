@@ -21,6 +21,11 @@ export type Database = {
           authorized_person_crea: string | null
           authorized_person_name: string | null
           authorized_person_title: string | null
+          brand_accent_color: string | null
+          brand_font_family: string | null
+          brand_primary_color: string | null
+          brand_secondary_color: string | null
+          brand_tagline: string | null
           city: string | null
           cnpj: string | null
           company_type: string
@@ -28,6 +33,7 @@ export type Database = {
           created_at: string
           default_payment_terms: string | null
           default_warranty_period: string | null
+          doc_id_prefix: string | null
           id: string
           legal_name: string | null
           logo_url: string | null
@@ -35,6 +41,7 @@ export type Database = {
           signature_image_url: string | null
           state: string | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           address?: string | null
@@ -42,6 +49,11 @@ export type Database = {
           authorized_person_crea?: string | null
           authorized_person_name?: string | null
           authorized_person_title?: string | null
+          brand_accent_color?: string | null
+          brand_font_family?: string | null
+          brand_primary_color?: string | null
+          brand_secondary_color?: string | null
+          brand_tagline?: string | null
           city?: string | null
           cnpj?: string | null
           company_type?: string
@@ -49,6 +61,7 @@ export type Database = {
           created_at?: string
           default_payment_terms?: string | null
           default_warranty_period?: string | null
+          doc_id_prefix?: string | null
           id?: string
           legal_name?: string | null
           logo_url?: string | null
@@ -56,6 +69,7 @@ export type Database = {
           signature_image_url?: string | null
           state?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           address?: string | null
@@ -63,6 +77,11 @@ export type Database = {
           authorized_person_crea?: string | null
           authorized_person_name?: string | null
           authorized_person_title?: string | null
+          brand_accent_color?: string | null
+          brand_font_family?: string | null
+          brand_primary_color?: string | null
+          brand_secondary_color?: string | null
+          brand_tagline?: string | null
           city?: string | null
           cnpj?: string | null
           company_type?: string
@@ -70,6 +89,7 @@ export type Database = {
           created_at?: string
           default_payment_terms?: string | null
           default_warranty_period?: string | null
+          doc_id_prefix?: string | null
           id?: string
           legal_name?: string | null
           logo_url?: string | null
@@ -77,6 +97,7 @@ export type Database = {
           signature_image_url?: string | null
           state?: string | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -85,6 +106,7 @@ export type Database = {
           client_id: string | null
           company_id: string | null
           created_at: string
+          doc_code: string | null
           document_type: string
           document_version: string
           generation_date: string
@@ -94,12 +116,15 @@ export type Database = {
           output_html: string | null
           project_title: string
           status: string
+          structured_data: Json | null
           updated_at: string
+          user_id: string | null
         }
         Insert: {
           client_id?: string | null
           company_id?: string | null
           created_at?: string
+          doc_code?: string | null
           document_type?: string
           document_version?: string
           generation_date?: string
@@ -109,12 +134,15 @@ export type Database = {
           output_html?: string | null
           project_title: string
           status?: string
+          structured_data?: Json | null
           updated_at?: string
+          user_id?: string | null
         }
         Update: {
           client_id?: string | null
           company_id?: string | null
           created_at?: string
+          doc_code?: string | null
           document_type?: string
           document_version?: string
           generation_date?: string
@@ -124,7 +152,9 @@ export type Database = {
           output_html?: string | null
           project_title?: string
           status?: string
+          structured_data?: Json | null
           updated_at?: string
+          user_id?: string | null
         }
         Relationships: [
           {
@@ -142,6 +172,36 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
     }
     Views: {
