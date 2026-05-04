@@ -3,11 +3,14 @@ import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History, Loa
 import { useRef, useState, useCallback, useEffect } from "react";
 import { VersionHistoryPanel } from "@/components/VersionHistoryPanel";
 import { useProposalVersions } from "@/hooks/use-proposal-versions";
-import { generateProposalPdf } from "@/lib/pdf/generate";
+import { generateStructuredPdf } from "@/lib/pdf/generateStructured";
 import { toast } from "sonner";
+import type { StructuredProposalData, ProjectData } from "@/types/project";
 
 interface ProposalPreviewProps {
   html: string;
+  structured?: StructuredProposalData;
+  formData?: ProjectData;
   onBack: () => void;
   proposalId?: string;
 }
