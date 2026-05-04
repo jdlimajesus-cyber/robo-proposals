@@ -333,12 +333,20 @@ export function ProposalPreview({ html, structured, formData, onBack, proposalId
   };
 
   const handleExportPdf = async () => {
+    if (!structured) {
+      toast.error("Dados estruturados indisponíveis para gerar PDF.");
+      return;
+    }
     setIsGeneratingPdf(true);
     setPdfProgress("Iniciando...");
     try {
-      const content = contentRef.current?.innerHTML || currentHtml;
-      const fileName = `proposta-${proposalId}.pdf`;
-      await generateProposalPdf(content, fileName, undefined, setPdfProgress);
+      const brand = {
+        primary: formData?.company_brand_primary_color || "#1a3a5c",
+        secondary: formData?.company_brand_secondary_color || "#e67e22",
+        accent: formData?.company_brand_accent_color || "#0f1419",
+      };
+      const fileName = `proposta-${structured.meta?.docId || proposalId}.pdf`;
+      await generateStructuredPdf(structured, brand, fileName, setPdfProgress);
       toast.success("PDF gerado com sucesso!");
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
