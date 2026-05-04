@@ -3,11 +3,14 @@ import { ArrowLeft, Download, FileText, Printer, Pencil, PencilOff, History, Loa
 import { useRef, useState, useCallback, useEffect } from "react";
 import { VersionHistoryPanel } from "@/components/VersionHistoryPanel";
 import { useProposalVersions } from "@/hooks/use-proposal-versions";
-import { generateProposalPdf } from "@/lib/pdf/generate";
+import { generateStructuredPdf } from "@/lib/pdf/generateStructured";
 import { toast } from "sonner";
+import type { StructuredProposalData, ProjectData } from "@/types/project";
 
 interface ProposalPreviewProps {
   html: string;
+  structured?: StructuredProposalData;
+  formData?: ProjectData;
   onBack: () => void;
   proposalId?: string;
 }
@@ -143,7 +146,7 @@ const A4_PRINT_STYLES = `
   }
 `;
 
-export function ProposalPreview({ html, onBack, proposalId = "default" }: ProposalPreviewProps) {
+export function ProposalPreview({ html, structured, formData, onBack, proposalId = "default" }: ProposalPreviewProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
@@ -330,12 +333,20 @@ export function ProposalPreview({ html, onBack, proposalId = "default" }: Propos
   };
 
   const handleExportPdf = async () => {
+    if (!structured) {
+      toast.error("Dados estruturados indisponíveis para gerar PDF.");
+      return;
+    }
     setIsGeneratingPdf(true);
     setPdfProgress("Iniciando...");
     try {
-      const content = contentRef.current?.innerHTML || currentHtml;
-      const fileName = `proposta-${proposalId}.pdf`;
-      await generateProposalPdf(content, fileName, undefined, setPdfProgress);
+      const brand = {
+        primary: formData?.company_brand_primary_color || "#1a3a5c",
+        secondary: formData?.company_brand_secondary_color || "#e67e22",
+        accent: formData?.company_brand_accent_color || "#0f1419",
+      };
+      const fileName = `proposta-${structured.meta?.docId || proposalId}.pdf`;
+      await generateStructuredPdf(structured, brand, fileName, setPdfProgress);
       toast.success("PDF gerado com sucesso!");
     } catch (error) {
       console.error("Erro ao gerar PDF:", error);
