@@ -146,7 +146,7 @@ const A4_PRINT_STYLES = `
   }
 `;
 
-export function ProposalPreview({ html, onBack, proposalId = "default" }: ProposalPreviewProps) {
+export function ProposalPreview({ html, structured, formData, onBack, proposalId = "default" }: ProposalPreviewProps) {
   const contentRef = useRef<HTMLDivElement>(null);
   const [isEditing, setIsEditing] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
