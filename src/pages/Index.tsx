@@ -48,8 +48,11 @@ const Index = () => {
       });
 
       if (error) throw error;
-      if (!result?.html || !result?.structured) throw new Error("Resposta inválida do gerador");
-
+      if (result?.error) throw new Error(result.error);
+      if (!result?.html || !result?.structured) {
+        console.error("Invalid generator response:", result);
+        throw new Error("Resposta inválida do gerador");
+      }
       const fullHtml: string = result.html;
       const structuredData: StructuredProposalData = result.structured;
       const docId: string = result.docId;
