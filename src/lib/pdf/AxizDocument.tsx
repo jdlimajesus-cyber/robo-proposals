@@ -242,6 +242,7 @@ export const AxizProposalDocument = ({
   for (let i = 0; i < specs.length; i += 2) specPairs.push([specs[i], specs[i + 1]]);
 
   const bom = data.bom || ({ categories: [], totals: [] } as any);
+  const subsystems = data.subsystems || [];
   const sched = data.schedule || { totalWeeks: 6, phases: [] };
   const risks = data.risks || [];
   const roi = data.roi || [];
