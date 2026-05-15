@@ -35,17 +35,17 @@ PROIBIÇÕES:
 
 function buildVersionGuidance(version: string): string {
   if (version === "Basica") {
-    return `VERSÃO BÁSICA: foco em sumário, BOM resumida (10-15 itens), 1 cenário de ROI, riscos principais (3-5), cronograma simplificado (4-6 semanas).`;
+    return `VERSÃO BÁSICA: foco em sumário, BOM resumida (10-15 itens), 1 cenário de ROI, riscos principais (3-5), cronograma simplificado (4-6 semanas), subsistemas essenciais (4-5 subsistemas com descrição objetiva).`;
   }
   if (version === "Normal") {
-    return `VERSÃO NORMAL: BOM detalhada (20-30 itens em 4-6 categorias), 3 cenários ROI, matriz de risco com 5-7 itens, cronograma com 5-8 fases.`;
+    return `VERSÃO NORMAL: BOM detalhada (20-30 itens em 4-6 categorias), 3 cenários ROI, matriz de risco com 5-7 itens, cronograma com 5-8 fases, subsistemas detalhados (5-7 subsistemas com componentes-chave).`;
   }
-  return `VERSÃO COMPLETA: BOM completa (30+ itens em até 6 categorias visíveis ao cliente — Engenharia, Matérias-primas, Componentes, Automação, Segurança, Serviços), 3 cenários ROI com sensibilidade, matriz de risco completa (7+ itens em 7 dimensões), cronograma 6-12 semanas com responsáveis e marcos.`;
+  return `VERSÃO COMPLETA: BOM completa (30+ itens em até 6 categorias visíveis ao cliente — Engenharia, Matérias-primas, Componentes, Automação, Segurança, Serviços), 3 cenários ROI com sensibilidade, matriz de risco completa (7+ itens em 7 dimensões), cronograma 6-12 semanas com responsáveis e marcos, descrição EXAUSTIVA de subsistemas (7-10 subsistemas técnicos cobrindo Mecânica/Estrutural, Elétrica/Energia, Pneumática/Hidráulica, Controle/PLC, Robótica/Manipulação, Segurança Funcional, Visão/Sensoriamento, Software/Supervisório/SCADA, Comunicação/Rede Industrial, Utilidades) — cada subsistema com objetivo, descrição técnica de 2-3 parágrafos, lista de componentes principais com especificação, parâmetros técnicos quantitativos, normas aplicáveis e interfaces com outros subsistemas.`;
 }
 
 const JSON_SCHEMA = {
   type: "object",
-  required: ["meta", "executive", "specs", "bom", "schedule", "risks", "roi", "acceptance"],
+  required: ["meta", "executive", "specs", "subsystems", "bom", "schedule", "risks", "roi", "acceptance"],
   properties: {
     meta: {
       type: "object",
@@ -92,6 +92,49 @@ const JSON_SCHEMA = {
         type: "object",
         required: ["label", "value"],
         properties: { label: { type: "string" }, value: { type: "string" } },
+      },
+    },
+    subsystems: {
+      type: "array",
+      description: "Subsistemas técnicos que compõem o projeto. Cada subsistema deve ter descrição completa, componentes principais, parâmetros e normas aplicáveis.",
+      items: {
+        type: "object",
+        required: ["code", "name", "discipline", "objective", "description", "components", "technicalParams", "standards"],
+        properties: {
+          code: { type: "string", description: "Ex: SS-01, SS-02" },
+          name: { type: "string", description: "Ex: Sistema Mecânico Estrutural, Sistema de Controle e Automação" },
+          discipline: { type: "string", description: "Mecânica, Elétrica, Pneumática, Hidráulica, Controle, Robótica, Segurança, Visão, Software, Comunicação, Utilidades" },
+          objective: { type: "string", description: "Função principal do subsistema em 1 linha" },
+          description: { type: "string", description: "Descrição técnica detalhada (2-3 parágrafos) explicando arquitetura, princípio de funcionamento e justificativa de escolha" },
+          components: {
+            type: "array",
+            description: "Componentes principais do subsistema (3-8 itens)",
+            items: {
+              type: "object",
+              required: ["name", "specification", "function"],
+              properties: {
+                name: { type: "string", description: "Nome do componente (ex: Servoacionamento, Robô antropomórfico, CLP)" },
+                specification: { type: "string", description: "Especificação técnica (potência, classe, tensão, alcance, capacidade — sem inventar marcas)" },
+                function: { type: "string", description: "Função no subsistema" },
+              },
+            },
+          },
+          technicalParams: {
+            type: "array",
+            description: "Parâmetros técnicos quantitativos (4-8 pares label/valor)",
+            items: {
+              type: "object",
+              required: ["label", "value"],
+              properties: { label: { type: "string" }, value: { type: "string" } },
+            },
+          },
+          standards: {
+            type: "array",
+            description: "Normas e padrões aplicáveis (ex: NR-12, ISO 13849-1, IEC 60204-1, ISA-95)",
+            items: { type: "string" },
+          },
+          interfaces: { type: "string", description: "Interfaces com outros subsistemas (mecânica, elétrica, comunicação)" },
+        },
       },
     },
     bom: {
@@ -276,6 +319,33 @@ function buildHtmlFromStructured(d: any, brandPrimary: string, brandSecondary: s
     `<tr><td style="padding:6px 10px;border:1px solid #eee;font-weight:600;font-size:10px">${esc(r.scenario)}${r.scenario === "Base" ? ' <span style="background:'+brandSecondary+';color:white;padding:1px 6px;border-radius:3px;font-size:9px;margin-left:6px">RECOMENDADO</span>' : ""}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.capex)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.annualBenefit)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.paybackMonths)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.assumption)}</td></tr>`
   ).join("");
 
+  const subsystems: any[] = d.subsystems || [];
+  const subsystemBlocks = subsystems.map((ss: any) => {
+    const compRows = (ss.components || []).map((c: any) =>
+      `<tr><td style="padding:5px 8px;border:1px solid #eee;font-size:9px;font-weight:600;width:25%">${esc(c.name)}</td><td style="padding:5px 8px;border:1px solid #eee;font-size:9px;width:40%">${esc(c.specification)}</td><td style="padding:5px 8px;border:1px solid #eee;font-size:9px;color:#555">${esc(c.function)}</td></tr>`
+    ).join("");
+    const paramRows = (ss.technicalParams || []).map((p: any) =>
+      `<tr><td style="padding:4px 8px;border:1px solid #eee;font-size:9px;background:#f8fafc;font-weight:600;color:#555;width:50%">${esc(p.label)}</td><td style="padding:4px 8px;border:1px solid #eee;font-size:9px">${esc(p.value)}</td></tr>`
+    ).join("");
+    const stdBadges = (ss.standards || []).map((s: string) =>
+      `<span style="display:inline-block;background:#eef2f6;color:${brandPrimary};padding:2px 8px;border-radius:3px;font-size:9px;font-family:monospace;margin:2px 4px 2px 0;border:1px solid #d1dce8">${esc(s)}</span>`
+    ).join("");
+    return `<div style="page-break-inside:avoid;margin-bottom:18px;border:1px solid #e5e7eb;border-radius:4px;overflow:hidden">
+      <div style="background:${brandPrimary};color:#fff;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
+        <div><span style="font-family:monospace;font-size:9px;color:${brandSecondary}">${esc(ss.code)}</span> <strong style="font-size:11px;letter-spacing:0.3px">${esc(ss.name)}</strong></div>
+        <span style="font-size:9px;font-family:monospace;opacity:0.85">${esc(ss.discipline)}</span>
+      </div>
+      <div style="padding:12px">
+        <div style="font-size:10px;color:#444;margin-bottom:8px"><strong style="color:${brandPrimary}">Objetivo:</strong> ${esc(ss.objective)}</div>
+        <div style="font-size:10px;line-height:1.55;text-align:justify;margin-bottom:10px;color:#222">${esc(ss.description).replace(/\n/g, "<br>")}</div>
+        ${compRows ? `<div style="font-size:9px;font-weight:700;color:${brandPrimary};margin:8px 0 4px;text-transform:uppercase;letter-spacing:0.5px">Componentes principais</div><table style="width:100%;border-collapse:collapse;margin-bottom:8px"><thead><tr style="background:#f8fafc"><th style="padding:5px 8px;border:1px solid #eee;font-size:9px;text-align:left">Componente</th><th style="padding:5px 8px;border:1px solid #eee;font-size:9px;text-align:left">Especificação</th><th style="padding:5px 8px;border:1px solid #eee;font-size:9px;text-align:left">Função</th></tr></thead><tbody>${compRows}</tbody></table>` : ""}
+        ${paramRows ? `<div style="font-size:9px;font-weight:700;color:${brandPrimary};margin:8px 0 4px;text-transform:uppercase;letter-spacing:0.5px">Parâmetros técnicos</div><table style="width:100%;border-collapse:collapse;margin-bottom:8px"><tbody>${paramRows}</tbody></table>` : ""}
+        ${stdBadges ? `<div style="margin-top:8px"><span style="font-size:9px;font-weight:700;color:${brandPrimary};text-transform:uppercase;letter-spacing:0.5px;margin-right:8px">Normas:</span>${stdBadges}</div>` : ""}
+        ${ss.interfaces ? `<div style="margin-top:8px;padding:8px;background:#f8fafc;border-left:3px solid ${brandSecondary};font-size:9px"><strong style="color:${brandPrimary}">Interfaces:</strong> ${esc(ss.interfaces)}</div>` : ""}
+      </div>
+    </div>`;
+  }).join("");
+
   const headlineCards = (exec.headlineMetrics || []).map((h: any) =>
     `<div style="flex:1;padding:14px;background:#f8fafc;border-left:4px solid ${brandSecondary};border-radius:4px"><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px">${esc(h.label)}</div><div style="font-size:16px;font-weight:700;color:${brandPrimary};margin-top:4px">${esc(h.value)}</div></div>`
   ).join("");
@@ -326,9 +396,23 @@ function buildHtmlFromStructured(d: any, brandPrimary: string, brandSecondary: s
   ${exec.note ? `<div style="display:flex;gap:12px;padding:14px;background:#fef9e7;border-left:4px solid #d97706;border-radius:4px;margin-bottom:16px;page-break-inside:avoid"><div style="font-size:18px">⚠</div><div><div style="font-weight:700;color:#92400e;margin-bottom:4px;font-size:11px">Nota sobre Investimento</div><div style="font-size:10px;line-height:1.5">${esc(exec.note)}</div></div></div>` : ""}
 
   <div style="display:flex;gap:10px;margin:16px 0;page-break-inside:avoid">${headlineCards}</div>
+</div>
 
-  <div style="background:${brandPrimary};color:white;padding:6px 12px;margin:20px 0 8px;display:inline-block">
-    <span style="color:${brandSecondary};font-family:monospace;font-size:9px">// 05</span> <strong style="font-size:11px">LISTA DE MATERIAIS — BOM DETALHADA</strong>
+<!-- PÁGINA SUBSISTEMAS -->
+<div style="page-break-after:always">
+  <div style="background:${brandPrimary};color:white;padding:10px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div><span style="color:${brandSecondary};font-family:monospace;font-size:10px">// 04</span> <strong style="font-size:14px;letter-spacing:0.5px">DESCRIÇÃO TÉCNICA DOS SUBSISTEMAS</strong></div>
+    <div style="font-family:monospace;font-size:9px">${subsystems.length} subsistemas</div>
+  </div>
+  <div style="font-size:10px;color:#555;margin-bottom:14px;line-height:1.5">A solução é decomposta nos subsistemas técnicos descritos a seguir. Cada subsistema apresenta objetivo funcional, descrição de arquitetura, componentes principais, parâmetros técnicos quantitativos e normas aplicáveis, garantindo rastreabilidade de engenharia.</div>
+  ${subsystemBlocks}
+</div>
+
+<!-- PÁGINA BOM -->
+<div style="page-break-after:always">
+  <div style="background:${brandPrimary};color:white;padding:10px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div><span style="color:${brandSecondary};font-family:monospace;font-size:10px">// 05</span> <strong style="font-size:14px;letter-spacing:0.5px">LISTA DE MATERIAIS — BOM DETALHADA</strong></div>
+    <div style="font-family:monospace;font-size:9px">${esc(m.docId)} · REV.${esc(m.version)}</div>
   </div>
 
   <table style="width:100%;border-collapse:collapse;page-break-inside:auto">
@@ -473,6 +557,8 @@ ${d.company_cnpj ? `- contracted.cnpj = "${d.company_cnpj}"` : ""}
 ${buildVersionGuidance(version)}
 
 Use valores realistas em R$ (mercado brasileiro). Detalhe a BOM com itens, disciplina, quantidade, valores. Sem placeholders fictícios. Linguagem executiva.
+
+OBRIGATÓRIO — SUBSISTEMAS: Decomponha a solução em subsistemas técnicos coerentes com a aplicação (${d.application_type || "automação industrial"}). Para CADA subsistema, escreva uma descrição substantiva (2-3 parágrafos explicando arquitetura, princípio de operação e justificativa técnica), liste 3-8 componentes principais com especificação quantitativa (potência, classe IP, tensão, alcance, capacidade, categoria de segurança), forneça 4-8 parâmetros técnicos quantitativos e cite normas aplicáveis (NR-12, ISO 13849-1, IEC 60204-1, ISA-95, IEC 62443, etc). NÃO invente marcas comerciais — use designações genéricas ("servoacionamento de 3 kW classe IP54", "robô antropomórfico 6 eixos com 20 kg de payload e 1.800 mm de alcance"). Inclua interfaces entre subsistemas (mecânica, elétrica, comunicação industrial).
 
 RETORNE EXCLUSIVAMENTE O JSON conforme a tool fornecida — nada mais.`;
 

@@ -118,6 +118,17 @@ export interface StructuredProposalData {
     headlineMetrics: { label: string; value: string }[];
   };
   specs: { label: string; value: string }[];
+  subsystems?: {
+    code: string;
+    name: string;
+    discipline: string;
+    objective: string;
+    description: string;
+    components: { name: string; specification: string; function: string }[];
+    technicalParams: { label: string; value: string }[];
+    standards: string[];
+    interfaces?: string;
+  }[];
   bom: {
     categories: {
       code: string;
