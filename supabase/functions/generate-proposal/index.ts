@@ -319,6 +319,33 @@ function buildHtmlFromStructured(d: any, brandPrimary: string, brandSecondary: s
     `<tr><td style="padding:6px 10px;border:1px solid #eee;font-weight:600;font-size:10px">${esc(r.scenario)}${r.scenario === "Base" ? ' <span style="background:'+brandSecondary+';color:white;padding:1px 6px;border-radius:3px;font-size:9px;margin-left:6px">RECOMENDADO</span>' : ""}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.capex)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.annualBenefit)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.paybackMonths)}</td><td style="padding:6px 10px;border:1px solid #eee;font-size:10px">${esc(r.assumption)}</td></tr>`
   ).join("");
 
+  const subsystems: any[] = d.subsystems || [];
+  const subsystemBlocks = subsystems.map((ss: any) => {
+    const compRows = (ss.components || []).map((c: any) =>
+      `<tr><td style="padding:5px 8px;border:1px solid #eee;font-size:9px;font-weight:600;width:25%">${esc(c.name)}</td><td style="padding:5px 8px;border:1px solid #eee;font-size:9px;width:40%">${esc(c.specification)}</td><td style="padding:5px 8px;border:1px solid #eee;font-size:9px;color:#555">${esc(c.function)}</td></tr>`
+    ).join("");
+    const paramRows = (ss.technicalParams || []).map((p: any) =>
+      `<tr><td style="padding:4px 8px;border:1px solid #eee;font-size:9px;background:#f8fafc;font-weight:600;color:#555;width:50%">${esc(p.label)}</td><td style="padding:4px 8px;border:1px solid #eee;font-size:9px">${esc(p.value)}</td></tr>`
+    ).join("");
+    const stdBadges = (ss.standards || []).map((s: string) =>
+      `<span style="display:inline-block;background:#eef2f6;color:${brandPrimary};padding:2px 8px;border-radius:3px;font-size:9px;font-family:monospace;margin:2px 4px 2px 0;border:1px solid #d1dce8">${esc(s)}</span>`
+    ).join("");
+    return `<div style="page-break-inside:avoid;margin-bottom:18px;border:1px solid #e5e7eb;border-radius:4px;overflow:hidden">
+      <div style="background:${brandPrimary};color:#fff;padding:8px 12px;display:flex;justify-content:space-between;align-items:center">
+        <div><span style="font-family:monospace;font-size:9px;color:${brandSecondary}">${esc(ss.code)}</span> <strong style="font-size:11px;letter-spacing:0.3px">${esc(ss.name)}</strong></div>
+        <span style="font-size:9px;font-family:monospace;opacity:0.85">${esc(ss.discipline)}</span>
+      </div>
+      <div style="padding:12px">
+        <div style="font-size:10px;color:#444;margin-bottom:8px"><strong style="color:${brandPrimary}">Objetivo:</strong> ${esc(ss.objective)}</div>
+        <div style="font-size:10px;line-height:1.55;text-align:justify;margin-bottom:10px;color:#222">${esc(ss.description).replace(/\n/g, "<br>")}</div>
+        ${compRows ? `<div style="font-size:9px;font-weight:700;color:${brandPrimary};margin:8px 0 4px;text-transform:uppercase;letter-spacing:0.5px">Componentes principais</div><table style="width:100%;border-collapse:collapse;margin-bottom:8px"><thead><tr style="background:#f8fafc"><th style="padding:5px 8px;border:1px solid #eee;font-size:9px;text-align:left">Componente</th><th style="padding:5px 8px;border:1px solid #eee;font-size:9px;text-align:left">Especificação</th><th style="padding:5px 8px;border:1px solid #eee;font-size:9px;text-align:left">Função</th></tr></thead><tbody>${compRows}</tbody></table>` : ""}
+        ${paramRows ? `<div style="font-size:9px;font-weight:700;color:${brandPrimary};margin:8px 0 4px;text-transform:uppercase;letter-spacing:0.5px">Parâmetros técnicos</div><table style="width:100%;border-collapse:collapse;margin-bottom:8px"><tbody>${paramRows}</tbody></table>` : ""}
+        ${stdBadges ? `<div style="margin-top:8px"><span style="font-size:9px;font-weight:700;color:${brandPrimary};text-transform:uppercase;letter-spacing:0.5px;margin-right:8px">Normas:</span>${stdBadges}</div>` : ""}
+        ${ss.interfaces ? `<div style="margin-top:8px;padding:8px;background:#f8fafc;border-left:3px solid ${brandSecondary};font-size:9px"><strong style="color:${brandPrimary}">Interfaces:</strong> ${esc(ss.interfaces)}</div>` : ""}
+      </div>
+    </div>`;
+  }).join("");
+
   const headlineCards = (exec.headlineMetrics || []).map((h: any) =>
     `<div style="flex:1;padding:14px;background:#f8fafc;border-left:4px solid ${brandSecondary};border-radius:4px"><div style="font-size:9px;color:#666;text-transform:uppercase;letter-spacing:0.5px">${esc(h.label)}</div><div style="font-size:16px;font-weight:700;color:${brandPrimary};margin-top:4px">${esc(h.value)}</div></div>`
   ).join("");
