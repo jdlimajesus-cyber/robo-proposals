@@ -558,6 +558,8 @@ ${buildVersionGuidance(version)}
 
 Use valores realistas em R$ (mercado brasileiro). Detalhe a BOM com itens, disciplina, quantidade, valores. Sem placeholders fictícios. Linguagem executiva.
 
+OBRIGATÓRIO — SUBSISTEMAS: Decomponha a solução em subsistemas técnicos coerentes com a aplicação (${d.application_type || "automação industrial"}). Para CADA subsistema, escreva uma descrição substantiva (2-3 parágrafos explicando arquitetura, princípio de operação e justificativa técnica), liste 3-8 componentes principais com especificação quantitativa (potência, classe IP, tensão, alcance, capacidade, categoria de segurança), forneça 4-8 parâmetros técnicos quantitativos e cite normas aplicáveis (NR-12, ISO 13849-1, IEC 60204-1, ISA-95, IEC 62443, etc). NÃO invente marcas comerciais — use designações genéricas ("servoacionamento de 3 kW classe IP54", "robô antropomórfico 6 eixos com 20 kg de payload e 1.800 mm de alcance"). Inclua interfaces entre subsistemas (mecânica, elétrica, comunicação industrial).
+
 RETORNE EXCLUSIVAMENTE O JSON conforme a tool fornecida — nada mais.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
