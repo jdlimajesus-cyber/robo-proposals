@@ -396,9 +396,23 @@ function buildHtmlFromStructured(d: any, brandPrimary: string, brandSecondary: s
   ${exec.note ? `<div style="display:flex;gap:12px;padding:14px;background:#fef9e7;border-left:4px solid #d97706;border-radius:4px;margin-bottom:16px;page-break-inside:avoid"><div style="font-size:18px">⚠</div><div><div style="font-weight:700;color:#92400e;margin-bottom:4px;font-size:11px">Nota sobre Investimento</div><div style="font-size:10px;line-height:1.5">${esc(exec.note)}</div></div></div>` : ""}
 
   <div style="display:flex;gap:10px;margin:16px 0;page-break-inside:avoid">${headlineCards}</div>
+</div>
 
-  <div style="background:${brandPrimary};color:white;padding:6px 12px;margin:20px 0 8px;display:inline-block">
-    <span style="color:${brandSecondary};font-family:monospace;font-size:9px">// 05</span> <strong style="font-size:11px">LISTA DE MATERIAIS — BOM DETALHADA</strong>
+<!-- PÁGINA SUBSISTEMAS -->
+<div style="page-break-after:always">
+  <div style="background:${brandPrimary};color:white;padding:10px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div><span style="color:${brandSecondary};font-family:monospace;font-size:10px">// 04</span> <strong style="font-size:14px;letter-spacing:0.5px">DESCRIÇÃO TÉCNICA DOS SUBSISTEMAS</strong></div>
+    <div style="font-family:monospace;font-size:9px">${subsystems.length} subsistemas</div>
+  </div>
+  <div style="font-size:10px;color:#555;margin-bottom:14px;line-height:1.5">A solução é decomposta nos subsistemas técnicos descritos a seguir. Cada subsistema apresenta objetivo funcional, descrição de arquitetura, componentes principais, parâmetros técnicos quantitativos e normas aplicáveis, garantindo rastreabilidade de engenharia.</div>
+  ${subsystemBlocks}
+</div>
+
+<!-- PÁGINA BOM -->
+<div style="page-break-after:always">
+  <div style="background:${brandPrimary};color:white;padding:10px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center">
+    <div><span style="color:${brandSecondary};font-family:monospace;font-size:10px">// 05</span> <strong style="font-size:14px;letter-spacing:0.5px">LISTA DE MATERIAIS — BOM DETALHADA</strong></div>
+    <div style="font-family:monospace;font-size:9px">${esc(m.docId)} · REV.${esc(m.version)}</div>
   </div>
 
   <table style="width:100%;border-collapse:collapse;page-break-inside:auto">
