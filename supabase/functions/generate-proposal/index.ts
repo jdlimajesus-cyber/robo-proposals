@@ -94,6 +94,49 @@ const JSON_SCHEMA = {
         properties: { label: { type: "string" }, value: { type: "string" } },
       },
     },
+    subsystems: {
+      type: "array",
+      description: "Subsistemas técnicos que compõem o projeto. Cada subsistema deve ter descrição completa, componentes principais, parâmetros e normas aplicáveis.",
+      items: {
+        type: "object",
+        required: ["code", "name", "discipline", "objective", "description", "components", "technicalParams", "standards"],
+        properties: {
+          code: { type: "string", description: "Ex: SS-01, SS-02" },
+          name: { type: "string", description: "Ex: Sistema Mecânico Estrutural, Sistema de Controle e Automação" },
+          discipline: { type: "string", description: "Mecânica, Elétrica, Pneumática, Hidráulica, Controle, Robótica, Segurança, Visão, Software, Comunicação, Utilidades" },
+          objective: { type: "string", description: "Função principal do subsistema em 1 linha" },
+          description: { type: "string", description: "Descrição técnica detalhada (2-3 parágrafos) explicando arquitetura, princípio de funcionamento e justificativa de escolha" },
+          components: {
+            type: "array",
+            description: "Componentes principais do subsistema (3-8 itens)",
+            items: {
+              type: "object",
+              required: ["name", "specification", "function"],
+              properties: {
+                name: { type: "string", description: "Nome do componente (ex: Servoacionamento, Robô antropomórfico, CLP)" },
+                specification: { type: "string", description: "Especificação técnica (potência, classe, tensão, alcance, capacidade — sem inventar marcas)" },
+                function: { type: "string", description: "Função no subsistema" },
+              },
+            },
+          },
+          technicalParams: {
+            type: "array",
+            description: "Parâmetros técnicos quantitativos (4-8 pares label/valor)",
+            items: {
+              type: "object",
+              required: ["label", "value"],
+              properties: { label: { type: "string" }, value: { type: "string" } },
+            },
+          },
+          standards: {
+            type: "array",
+            description: "Normas e padrões aplicáveis (ex: NR-12, ISO 13849-1, IEC 60204-1, ISA-95)",
+            items: { type: "string" },
+          },
+          interfaces: { type: "string", description: "Interfaces com outros subsistemas (mecânica, elétrica, comunicação)" },
+        },
+      },
+    },
     bom: {
       type: "object",
       required: ["categories", "totals"],
