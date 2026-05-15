@@ -380,7 +380,94 @@ export const AxizProposalDocument = ({
         <PageFooter d={data} s={s} />
       </Page>
 
-      {/* PÁGINA 3 — CRONOGRAMA + RISCOS + ROI + ACEITE */}
+      {/* PÁGINA 3 — DESCRIÇÃO TÉCNICA DOS SUBSISTEMAS */}
+      {subsystems.length > 0 && (
+        <Page size="A4" style={s.page}>
+          <PageHeader d={data} s={s} />
+          <View style={s.sectionBar}>
+            <Text>
+              <Text style={s.sectionNum}>// 04</Text>
+              <Text style={s.sectionLabel}>DESCRIÇÃO TÉCNICA DOS SUBSISTEMAS</Text>
+            </Text>
+            <Text style={s.sectionMeta}>{subsystems.length} subsistemas</Text>
+          </View>
+          <Text style={[s.body, { marginBottom: 8 }]}>
+            A solução é decomposta nos subsistemas técnicos descritos a seguir. Cada subsistema apresenta objetivo funcional, descrição de arquitetura, componentes principais, parâmetros técnicos quantitativos, normas aplicáveis e interfaces — garantindo rastreabilidade de engenharia.
+          </Text>
+
+          {subsystems.map((ss, si) => (
+            <View key={si} style={s.ssCard} wrap={true}>
+              <View style={s.ssHeader} wrap={false}>
+                <Text>
+                  <Text style={s.ssCode}>{ss.code} </Text>
+                  <Text style={s.ssName}>{ss.name}</Text>
+                </Text>
+                <Text style={s.ssDiscipline}>{ss.discipline}</Text>
+              </View>
+              <View style={s.ssBody}>
+                <Text style={s.ssObjective}>
+                  <Text style={{ fontWeight: "bold", color: brand.primary }}>Objetivo: </Text>
+                  {ss.objective}
+                </Text>
+                <Text style={s.ssDesc}>{ss.description}</Text>
+
+                {ss.components?.length ? (
+                  <>
+                    <Text style={s.ssSubLabel}>Componentes principais</Text>
+                    <View style={s.ssTable} wrap={false}>
+                      <View style={s.ssTableHead}>
+                        <Text style={[s.ssTableHeadCell, { flex: 2.2 }]}>Componente</Text>
+                        <Text style={[s.ssTableHeadCell, { flex: 3.5 }]}>Especificação</Text>
+                        <Text style={[s.ssTableHeadCell, { flex: 3, borderRightWidth: 0 }]}>Função</Text>
+                      </View>
+                      {ss.components.map((c, ci) => (
+                        <View key={ci} style={s.ssTableRow} wrap={false}>
+                          <Text style={[s.ssTableCell, { flex: 2.2, fontWeight: "bold" }]}>{c.name}</Text>
+                          <Text style={[s.ssTableCell, { flex: 3.5 }]}>{c.specification}</Text>
+                          <Text style={[s.ssTableCell, { flex: 3, color: "#555", borderRightWidth: 0 }]}>{c.function}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </>
+                ) : null}
+
+                {ss.technicalParams?.length ? (
+                  <>
+                    <Text style={s.ssSubLabel}>Parâmetros técnicos</Text>
+                    <View style={{ borderWidth: 1, borderColor: "#eee" }} wrap={false}>
+                      {ss.technicalParams.map((p, pi) => (
+                        <View key={pi} style={s.ssParamRow} wrap={false}>
+                          <Text style={s.ssParamLabel}>{p.label}</Text>
+                          <Text style={s.ssParamValue}>{p.value}</Text>
+                        </View>
+                      ))}
+                    </View>
+                  </>
+                ) : null}
+
+                {ss.standards?.length ? (
+                  <View style={{ flexDirection: "row", flexWrap: "wrap", marginTop: 6, alignItems: "center" }}>
+                    <Text style={[s.ssSubLabel, { marginTop: 0, marginRight: 6 }]}>Normas:</Text>
+                    {ss.standards.map((std, sti) => (
+                      <Text key={sti} style={s.ssBadge}>{std}</Text>
+                    ))}
+                  </View>
+                ) : null}
+
+                {ss.interfaces ? (
+                  <Text style={s.ssInterfaces}>
+                    <Text style={{ fontWeight: "bold", color: brand.primary }}>Interfaces: </Text>
+                    {ss.interfaces}
+                  </Text>
+                ) : null}
+              </View>
+            </View>
+          ))}
+          <PageFooter d={data} s={s} />
+        </Page>
+      )}
+
+      {/* PÁGINA 4 — CRONOGRAMA + RISCOS + ROI + ACEITE */}
       <Page size="A4" style={s.page}>
         <PageHeader d={data} s={s} />
         <View style={s.sectionBar}>
