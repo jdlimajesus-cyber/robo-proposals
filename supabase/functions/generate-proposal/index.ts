@@ -45,7 +45,7 @@ function buildVersionGuidance(version: string): string {
 
 const JSON_SCHEMA = {
   type: "object",
-  required: ["meta", "executive", "specs", "bom", "schedule", "risks", "roi", "acceptance"],
+  required: ["meta", "executive", "specs", "subsystems", "bom", "schedule", "risks", "roi", "acceptance"],
   properties: {
     meta: {
       type: "object",
