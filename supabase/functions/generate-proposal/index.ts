@@ -35,12 +35,12 @@ PROIBIÇÕES:
 
 function buildVersionGuidance(version: string): string {
   if (version === "Basica") {
-    return `VERSÃO BÁSICA: foco em sumário, BOM resumida (10-15 itens), 1 cenário de ROI, riscos principais (3-5), cronograma simplificado (4-6 semanas).`;
+    return `VERSÃO BÁSICA: foco em sumário, BOM resumida (10-15 itens), 1 cenário de ROI, riscos principais (3-5), cronograma simplificado (4-6 semanas), subsistemas essenciais (4-5 subsistemas com descrição objetiva).`;
   }
   if (version === "Normal") {
-    return `VERSÃO NORMAL: BOM detalhada (20-30 itens em 4-6 categorias), 3 cenários ROI, matriz de risco com 5-7 itens, cronograma com 5-8 fases.`;
+    return `VERSÃO NORMAL: BOM detalhada (20-30 itens em 4-6 categorias), 3 cenários ROI, matriz de risco com 5-7 itens, cronograma com 5-8 fases, subsistemas detalhados (5-7 subsistemas com componentes-chave).`;
   }
-  return `VERSÃO COMPLETA: BOM completa (30+ itens em até 6 categorias visíveis ao cliente — Engenharia, Matérias-primas, Componentes, Automação, Segurança, Serviços), 3 cenários ROI com sensibilidade, matriz de risco completa (7+ itens em 7 dimensões), cronograma 6-12 semanas com responsáveis e marcos.`;
+  return `VERSÃO COMPLETA: BOM completa (30+ itens em até 6 categorias visíveis ao cliente — Engenharia, Matérias-primas, Componentes, Automação, Segurança, Serviços), 3 cenários ROI com sensibilidade, matriz de risco completa (7+ itens em 7 dimensões), cronograma 6-12 semanas com responsáveis e marcos, descrição EXAUSTIVA de subsistemas (7-10 subsistemas técnicos cobrindo Mecânica/Estrutural, Elétrica/Energia, Pneumática/Hidráulica, Controle/PLC, Robótica/Manipulação, Segurança Funcional, Visão/Sensoriamento, Software/Supervisório/SCADA, Comunicação/Rede Industrial, Utilidades) — cada subsistema com objetivo, descrição técnica de 2-3 parágrafos, lista de componentes principais com especificação, parâmetros técnicos quantitativos, normas aplicáveis e interfaces com outros subsistemas.`;
 }
 
 const JSON_SCHEMA = {
