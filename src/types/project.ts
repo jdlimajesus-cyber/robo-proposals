@@ -176,7 +176,97 @@ export interface StructuredProposalData {
     contractor: { label: string; name?: string; title?: string; cnpj?: string };
     contracted: { label: string; name?: string; title?: string; crea?: string; cnpj?: string };
   };
+
+  // ===== Seções avançadas (template 16 seções) =====
+  context?: {
+    needAnalysis: string; // 2-3 parágrafos
+    fato: string;
+    premissa: string;
+    hipotese: string;
+    premisesList: string[]; // bullets quantitativos
+    processFlow: { step: number; label: string }[];
+    flowDescription: string;
+  };
+  alternatives?: {
+    code: string; // A1, A2, A3
+    name: string;
+    description: string;
+    advantages: string[];
+    disadvantages: string[];
+    operationalRisk: string;
+    qualityRisk?: string;
+    recommended: boolean;
+  }[];
+  solution?: {
+    architectureDescription: string;
+    technicalDetails: {
+      title: string; // ex 4.2.1 Cabines de Pintura
+      paragraphs: string[];
+      calculations?: { label: string; lines: string[] }[]; // caixas de cálculo
+      bullets?: string[];
+    }[];
+    equipmentSpecs: {
+      name: string; // ex Cabine de Pintura para Base (Primer)
+      bullets: string[];
+    }[];
+  };
+  scopeDetail?: {
+    suppliedEquipment: { name: string; bullets: string[] }[];
+    servicesIncluded: string[];
+    itemsNotIncluded: string[];
+    automationDiagramNote?: string;
+    cybersecurity?: {
+      otNetwork: string[];
+      itNetwork: string[];
+      measures: string[];
+      riskNote: string;
+    };
+  };
+  resources?: { area: string; allocated: string; profile: string }[];
+  costSummary?: {
+    items: { code: string; description: string; value: string; observations: string }[];
+    total: string;
+    composition: { label: string; percentage: string; description: string }[];
+    categoryDistribution: { label: string; percentage: string }[];
+  };
+  schedulePhaseTable?: { name: string; durationWeeks: number; cumulative: number }[];
+  acceptanceCriteria?: { criterion: string; target: string; validationMethod: string }[];
+  dataToConfirm?: { group: string; items: string[] }[];
+  conceptualVisualization?: { label: string; description: string }[];
+  roiAnalysis?: {
+    premises: string[];
+    benefits: { label: string; annual: string }[];
+    benefitsTotal: string;
+    opex: { label: string; annual: string }[];
+    opexTotal: string;
+    netCashFlow: string;
+    results: { vpl: string; tir: string; payback: string };
+    sensitivity: { scenario: string; capex: string; vpl: string; tir: string; payback: string }[];
+    conclusion: string;
+  };
+  safetyAnalysis?: {
+    hazards: { hazard: string; source: string; analysis: string }[];
+    engineeringControls: string[];
+    administrativeControls: string[];
+    ppe: string[];
+    complianceNote: string;
+  };
+  electricalSpecs?: {
+    distribution: string[];
+    protection: string[];
+    powerQuality: string[];
+    complianceNote: string;
+  };
+  executiveControl?: {
+    elaboratedBy: string;
+    emissionDate: string;
+    versionNote: string;
+    confidentialityNote: string;
+    nextSteps: string[];
+    signatures: { name: string; role: string }[];
+  };
 }
+
 
 export interface GeneratedDocument {
   id: string;
